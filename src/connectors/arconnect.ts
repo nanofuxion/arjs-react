@@ -1,5 +1,5 @@
 // import { useState, useEffect } from "react";
-import Arweave from 'arweave';
+// import Arweave from 'arweave';
 import Transaction from "arweave/node/lib/transaction";
 import { interactWrite, readContract } from "./smartweave";
 
@@ -11,71 +11,62 @@ function getSafe(fn, defaultVal) {
     }
 }
 
-export class Arc{ 
-    transaction: (data: any) => void;
-    post: (transaction: Transaction) => void;
-    addTag: (transaction: Transaction, name: string, value: string) => void;
-    sign: (transaction: Transaction, name: string, value: string) => void;
-    submit: (transaction: Transaction) => void;
-    arweave!: Arweave;
-    swc!: { interactWrite: (arweave: any, wallet: any, contractId: any, input: any) => Promise<string>; readContract: (arweave: any, contractId: any) => Promise<any>; };
+export function Arc(key: any, swc: boolean) {
 
-    constructor (key: any, swc: boolean){
-        let arweave: Arweave;
-        let that = this
 
-        let permissions = key.permissions, name = getSafe(key["name"], ""), logo = getSafe(key["logo"], "");
-                window.arweaveWallet.connect([...permissions],
-                    {
-                        name,
-                        logo
-                    })
-                window.addEventListener("arweaveWalletLoaded", () => {
-                    // @ts-ignore
-                    arweave = window.Arweave.init();
-                    that.arweave = arweave;
-                });
+    let permissions = key.permissions, name = getSafe(key["name"], ""), logo = getSafe(key["logo"], "");
+    window.arweaveWallet.connect([...permissions],
+        {
+            name,
+            logo
+        })
+        // @ts-ignore
+        const arweave = window.Arweave.init();
 
-        this.transaction = (data: any) =>{
+    return {
+        transaction: function (data: any) {
             let transaction: any;
-                (async () => 
-                    transaction = await arweave.createTransaction(data)
-                )()
+            (async () =>
+                transaction = await arweave.createTransaction(data)
+            )()
             return transaction;
-        }
+        },
 
 
 
-        this.post = (transaction: Transaction,) =>{
+        post: function (transaction: Transaction) {
             let response: any;
-                (async () => 
-                    response = await arweave.transactions.post(transaction)
-                )()
+            (async () =>
+                response = await arweave.transactions.post(transaction)
+            )()
             return response;
-        }
+        },
 
-        this.addTag = (transaction: Transaction, name: string, value: string) =>{
-                (async () => 
-                    await transaction.addTag(name, value)
-                )()
-        }
+        addTag: function (transaction: Transaction, name: string, value: string) {
+            (async () =>
+                await transaction.addTag(name, value)
+            )()
+        },
 
-        this.sign = async(transaction: Transaction) =>{
-                (async () => 
-                    await arweave.transactions.sign(transaction)
-                )()
-        }
+        sign: async function (transaction: Transaction) {
+            (async () =>
+                await arweave.transactions.sign(transaction)
+            )()
+        },
 
-        this.submit = (transaction: Transaction) =>{
+        submit: function (transaction: Transaction) {
             let uploader: any;
-                (async () => 
-                    uploader = await arweave.transactions.getUploader(transaction)
-                )()
+            (async () =>
+                uploader = await arweave.transactions.getUploader(transaction)
+            )()
             return uploader;
-        }
+        },
 
-        if(swc){
-            this.swc = {interactWrite, readContract}
+        smartweave: {
+        write: async (input: any, id: string) => 
+        (swc)? await interactWrite(arweave, 'use_wallet', id, input):"",
+        read: async (id) => 
+        (swc)? await readContract(arweave, id):""
         }
 
     }

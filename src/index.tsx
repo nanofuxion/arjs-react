@@ -1,18 +1,20 @@
 import React from "react";
 import { createContext, useContext, ReactNode, useState } from "react";
-import { connectors as arConnectors } from './connectors/index';
+import { connectors as arConnector } from './connectors/index';
 
 
 type WalletContext = {
     launch: () => void;
-    enabled: Array<any>;
-    swc: boolean;
+    enabled: { enabled: any[]; enableSWC: boolean;}
+    wallet: any;
 } | null
 
 const ArjsContextDefaultValues: WalletContext = {
+
+
     launch: () => {},
-    enabled: [],
-    swc: false,
+    enabled: {enabled: [], enableSWC: false},
+    wallet: arConnector([], false),
 };
 
 
@@ -29,11 +31,12 @@ type Props = {
     children: ReactNode;
 };
 
-export {arConnectors as connectors}
+export { arConnector as connectors }
 
-export function ArjsProvider({ connectors, enableSWC, children }: Props) {
+export function ArjsProvider({ connectors, enableSWC = false, children }: Props) {
     const [enabled, setEnabled] = useState<Array<any>>([]);
     const [swc, setSwc] = useState<boolean>(false);
+    const [wallet, setWallet] = useState<any>();
 
     let list:Array<any> = []; 
     for(const connector in connectors) {
@@ -47,14 +50,15 @@ export function ArjsProvider({ connectors, enableSWC, children }: Props) {
     const launch = () => {
             setEnabled(list);
             setSwc(enableSWC)
+            setWallet(arConnector(enabled, enableSWC))
     };
 
 
 
     const value = {
         launch,
-        enabled,
-        swc,
+        enabled: {enabled , enableSWC: swc},
+        wallet,
     };
 
     return (

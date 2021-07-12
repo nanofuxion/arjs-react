@@ -1,9 +1,12 @@
 import { ReactNode } from "react";
-import { connectors as arConnectors } from './connectors/index';
+import { connectors as arConnector } from './connectors/index';
 declare type WalletContext = {
     launch: () => void;
-    enabled: Array<any>;
-    swc: boolean;
+    enabled: {
+        enabled: any[];
+        enableSWC: boolean;
+    };
+    wallet: any;
 } | null;
 export declare function useArjs(): WalletContext;
 declare type Props = {
@@ -11,6 +14,6 @@ declare type Props = {
     enableSWC: boolean;
     children: ReactNode;
 };
-export { arConnectors as connectors };
+export { arConnector as connectors };
 export declare function ArjsProvider({ connectors, enableSWC, children }: Props): JSX.Element;
 //# sourceMappingURL=index.d.ts.map

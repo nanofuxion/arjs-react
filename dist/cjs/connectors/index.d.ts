@@ -1,7 +1,5 @@
-import { ApiConfig } from "arweave/node/lib/api";
-export declare class connectors {
-    connect: (wallet: string, key: any, apiConfig?: ApiConfig) => void;
-    arweave: any;
-    constructor(enabled: Array<any>, swc: boolean);
-}
+export declare function connectors(enabled: Array<any>, swc: boolean): {
+    arweave: {};
+    connect: (wallet: any, key: any) => void;
+};
 //# sourceMappingURL=index.d.ts.map

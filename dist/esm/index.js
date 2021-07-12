@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, createContext } from 'react';
+import React, { useContext, useState, createContext } from 'react';
 import { interactWrite as interactWrite$1, readContract as readContract$1 } from 'smartweave';
 import Arweave from 'arweave';
 
@@ -860,388 +860,487 @@ function getSafe(fn, defaultVal) {
   }
 }
 
-var Arc = function Arc(key, swc) {
-  var arweave;
-  var that = this;
+function Arc(key, swc) {
   var permissions = key.permissions,
       name = getSafe(key["name"], ""),
       logo = getSafe(key["logo"], "");
   window.arweaveWallet.connect([].concat(permissions), {
     name: name,
     logo: logo
-  });
-  window.addEventListener("arweaveWalletLoaded", function () {
-    // @ts-ignore
-    arweave = window.Arweave.init();
-    that.arweave = arweave;
-  });
+  }); // @ts-ignore
 
-  this.transaction = function (data) {
-    var transaction;
+  var arweave = window.Arweave.init();
+  return {
+    transaction: function transaction(data) {
+      var transaction;
 
-    _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
-      return runtime_1.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return arweave.createTransaction(data);
-
-            case 2:
-              return _context.abrupt("return", transaction = _context.sent);
-
-            case 3:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }))();
-
-    return transaction;
-  };
-
-  this.post = function (transaction) {
-    var response;
-
-    _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2() {
-      return runtime_1.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.next = 2;
-              return arweave.transactions.post(transaction);
-
-            case 2:
-              return _context2.abrupt("return", response = _context2.sent);
-
-            case 3:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2);
-    }))();
-
-    return response;
-  };
-
-  this.addTag = function (transaction, name, value) {
-    _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3() {
-      return runtime_1.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.next = 2;
-              return transaction.addTag(name, value);
-
-            case 2:
-              return _context3.abrupt("return", _context3.sent);
-
-            case 3:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3);
-    }))();
-  };
-
-  this.sign = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(transaction) {
-      return runtime_1.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4() {
-                return runtime_1.wrap(function _callee4$(_context4) {
-                  while (1) {
-                    switch (_context4.prev = _context4.next) {
-                      case 0:
-                        _context4.next = 2;
-                        return arweave.transactions.sign(transaction);
-
-                      case 2:
-                        return _context4.abrupt("return", _context4.sent);
-
-                      case 3:
-                      case "end":
-                        return _context4.stop();
-                    }
-                  }
-                }, _callee4);
-              }))();
-
-            case 1:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5);
-    }));
-
-    return function (_x) {
-      return _ref4.apply(this, arguments);
-    };
-  }();
-
-  this.submit = function (transaction) {
-    var uploader;
-
-    _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6() {
-      return runtime_1.wrap(function _callee6$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              _context6.next = 2;
-              return arweave.transactions.getUploader(transaction);
-
-            case 2:
-              return _context6.abrupt("return", uploader = _context6.sent);
-
-            case 3:
-            case "end":
-              return _context6.stop();
-          }
-        }
-      }, _callee6);
-    }))();
-
-    return uploader;
-  };
-
-  if (swc) {
-    this.swc = {
-      interactWrite: interactWrite,
-      readContract: readContract
-    };
-  }
-};
-
-var Arjs = function Arjs(key, apiConfig, swc) {
-  if (apiConfig === void 0) {
-    apiConfig = {
-      host: 'arweave.net',
-      port: 1984,
-      protocol: 'http'
-    };
-  }
-
-  var arweave;
-  var that = this;
-
-  this.connect = function () {
-    useEffect(function () {
-      arweave = Arweave.init(apiConfig);
-      that.arweave = arweave;
-    }, []);
-  };
-
-  this.transaction = function (data) {
-    var _useState = useState(),
-        transaction = _useState[0],
-        setTransaction = _useState[1];
-
-    useEffect(function () {
       _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
         return runtime_1.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.t0 = setTransaction;
-                _context.next = 3;
-                return arweave.createTransaction(data, key);
+                _context.next = 2;
+                return arweave.createTransaction(data);
+
+              case 2:
+                return _context.abrupt("return", transaction = _context.sent);
 
               case 3:
-                _context.t1 = _context.sent;
-                return _context.abrupt("return", (0, _context.t0)(_context.t1));
-
-              case 5:
               case "end":
                 return _context.stop();
             }
           }
         }, _callee);
       }))();
-    }, [transaction]);
-    return transaction;
-  };
 
-  this.post = function (transaction) {
-    var _useState2 = useState(),
-        response = _useState2[0],
-        setResponse = _useState2[1];
+      return transaction;
+    },
+    post: function post(transaction) {
+      var response;
 
-    useEffect(function () {
       _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2() {
         return runtime_1.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.t0 = setResponse;
-                _context2.next = 3;
+                _context2.next = 2;
                 return arweave.transactions.post(transaction);
 
-              case 3:
-                _context2.t1 = _context2.sent;
-                return _context2.abrupt("return", (0, _context2.t0)(_context2.t1));
+              case 2:
+                return _context2.abrupt("return", response = _context2.sent);
 
-              case 5:
+              case 3:
               case "end":
                 return _context2.stop();
             }
           }
         }, _callee2);
       }))();
-    }, [response]);
-    return response;
-  };
 
-  this.addTag = function (transaction, name, value) {
-    var _useState3 = useState(),
-        tags = _useState3[0],
-        setTag = _useState3[1];
-
-    useEffect(function () {
+      return response;
+    },
+    addTag: function addTag(transaction, name, value) {
       _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3() {
         return runtime_1.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.t0 = setTag;
-                _context3.next = 3;
+                _context3.next = 2;
                 return transaction.addTag(name, value);
 
-              case 3:
-                _context3.t1 = _context3.sent;
-                return _context3.abrupt("return", (0, _context3.t0)(_context3.t1));
+              case 2:
+                return _context3.abrupt("return", _context3.sent);
 
-              case 5:
+              case 3:
               case "end":
                 return _context3.stop();
             }
           }
         }, _callee3);
       }))();
-    }, [tags]);
-  };
-
-  this.sign = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(transaction) {
-      var _useState4, sig, setSig;
-
-      return runtime_1.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              _useState4 = useState(), sig = _useState4[0], setSig = _useState4[1];
-              useEffect(function () {
+    },
+    sign: function () {
+      var _sign = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(transaction) {
+        return runtime_1.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
                 _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4() {
                   return runtime_1.wrap(function _callee4$(_context4) {
                     while (1) {
                       switch (_context4.prev = _context4.next) {
                         case 0:
-                          _context4.t0 = setSig;
-                          _context4.next = 3;
+                          _context4.next = 2;
                           return arweave.transactions.sign(transaction);
 
-                        case 3:
-                          _context4.t1 = _context4.sent;
-                          return _context4.abrupt("return", (0, _context4.t0)(_context4.t1));
+                        case 2:
+                          return _context4.abrupt("return", _context4.sent);
 
-                        case 5:
+                        case 3:
                         case "end":
                           return _context4.stop();
                       }
                     }
                   }, _callee4);
                 }))();
-              }, [sig]);
 
-            case 2:
-            case "end":
-              return _context5.stop();
+              case 1:
+              case "end":
+                return _context5.stop();
+            }
           }
-        }
-      }, _callee5);
-    }));
+        }, _callee5);
+      }));
 
-    return function (_x) {
-      return _ref4.apply(this, arguments);
-    };
-  }();
+      function sign(_x) {
+        return _sign.apply(this, arguments);
+      }
 
-  this.submit = function (transaction) {
-    var _useState5 = useState(),
-        uploader = _useState5[0],
-        setUploader = _useState5[1];
+      return sign;
+    }(),
+    submit: function submit(transaction) {
+      var uploader;
 
-    useEffect(function () {
       _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6() {
         return runtime_1.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                _context6.t0 = setUploader;
-                _context6.next = 3;
+                _context6.next = 2;
                 return arweave.transactions.getUploader(transaction);
 
-              case 3:
-                _context6.t1 = _context6.sent;
-                return _context6.abrupt("return", (0, _context6.t0)(_context6.t1));
+              case 2:
+                return _context6.abrupt("return", uploader = _context6.sent);
 
-              case 5:
+              case 3:
               case "end":
                 return _context6.stop();
             }
           }
         }, _callee6);
       }))();
-    }, [uploader]);
-    return uploader;
-  };
 
-  if (swc) {
-    this.swc = {
-      interactWrite: interactWrite,
-      readContract: readContract
-    };
-  }
-};
+      return uploader;
+    },
+    smartweave: {
+      write: function () {
+        var _write = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(input, id) {
+          return runtime_1.wrap(function _callee7$(_context7) {
+            while (1) {
+              switch (_context7.prev = _context7.next) {
+                case 0:
+                  if (!swc) {
+                    _context7.next = 6;
+                    break;
+                  }
 
-var connectors = function connectors(enabled, swc) {
-  var that = this;
+                  _context7.next = 3;
+                  return interactWrite(arweave, 'use_wallet', id, input);
 
-  this.connect = function (wallet, key, apiConfig) {
-    console.log(wallet);
+                case 3:
+                  _context7.t0 = _context7.sent;
+                  _context7.next = 7;
+                  break;
 
-    switch (wallet) {
-      case "arweave":
-        if (enabled.indexOf(wallet) != -1) that.arweave = new Arjs(key, apiConfig, swc);
-        break;
+                case 6:
+                  _context7.t0 = "";
 
-      case "arconnect":
-        if (enabled.indexOf(wallet) != -1) that.arweave = new Arc(key, swc);
-        break;
+                case 7:
+                  return _context7.abrupt("return", _context7.t0);
 
-      default:
-        if (enabled.indexOf("arweave") != -1) that.arweave = new Arjs(key, apiConfig, swc);
+                case 8:
+                case "end":
+                  return _context7.stop();
+              }
+            }
+          }, _callee7);
+        }));
+
+        function write(_x2, _x3) {
+          return _write.apply(this, arguments);
+        }
+
+        return write;
+      }(),
+      read: function () {
+        var _read = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(id) {
+          return runtime_1.wrap(function _callee8$(_context8) {
+            while (1) {
+              switch (_context8.prev = _context8.next) {
+                case 0:
+                  if (!swc) {
+                    _context8.next = 6;
+                    break;
+                  }
+
+                  _context8.next = 3;
+                  return readContract(arweave, id);
+
+                case 3:
+                  _context8.t0 = _context8.sent;
+                  _context8.next = 7;
+                  break;
+
+                case 6:
+                  _context8.t0 = "";
+
+                case 7:
+                  return _context8.abrupt("return", _context8.t0);
+
+                case 8:
+                case "end":
+                  return _context8.stop();
+              }
+            }
+          }, _callee8);
+        }));
+
+        function read(_x4) {
+          return _read.apply(this, arguments);
+        }
+
+        return read;
+      }()
     }
   };
-};
+}
+
+function Arjs(key, swc) {
+  var arweave;
+  arweave = Arweave.init({});
+  return {
+    transaction: function transaction(data) {
+      var transaction;
+
+      _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
+        return runtime_1.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return arweave.createTransaction(data, key);
+
+              case 2:
+                return _context.abrupt("return", transaction = _context.sent);
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+
+      return transaction;
+    },
+    post: function post(transaction) {
+      var response;
+
+      _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2() {
+        return runtime_1.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return arweave.transactions.post(transaction);
+
+              case 2:
+                return _context2.abrupt("return", response = _context2.sent);
+
+              case 3:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+
+      return response;
+    },
+    addTag: function addTag(transaction, name, value) {
+      _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3() {
+        return runtime_1.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return transaction.addTag(name, value);
+
+              case 2:
+                return _context3.abrupt("return", _context3.sent);
+
+              case 3:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    sign: function () {
+      var _sign = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(transaction) {
+        return runtime_1.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4() {
+                  return runtime_1.wrap(function _callee4$(_context4) {
+                    while (1) {
+                      switch (_context4.prev = _context4.next) {
+                        case 0:
+                          _context4.next = 2;
+                          return arweave.transactions.sign(transaction, key);
+
+                        case 2:
+                          return _context4.abrupt("return", _context4.sent);
+
+                        case 3:
+                        case "end":
+                          return _context4.stop();
+                      }
+                    }
+                  }, _callee4);
+                }))();
+
+              case 1:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }));
+
+      function sign(_x) {
+        return _sign.apply(this, arguments);
+      }
+
+      return sign;
+    }(),
+    submit: function submit(transaction) {
+      var uploader;
+
+      _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6() {
+        return runtime_1.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _context6.next = 2;
+                return arweave.transactions.getUploader(transaction);
+
+              case 2:
+                return _context6.abrupt("return", uploader = _context6.sent);
+
+              case 3:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6);
+      }))();
+
+      return uploader;
+    },
+    smartweave: {
+      write: function () {
+        var _write = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(input, id) {
+          return runtime_1.wrap(function _callee7$(_context7) {
+            while (1) {
+              switch (_context7.prev = _context7.next) {
+                case 0:
+                  if (!swc) {
+                    _context7.next = 6;
+                    break;
+                  }
+
+                  _context7.next = 3;
+                  return interactWrite(arweave, key, id, input);
+
+                case 3:
+                  _context7.t0 = _context7.sent;
+                  _context7.next = 7;
+                  break;
+
+                case 6:
+                  _context7.t0 = "";
+
+                case 7:
+                  return _context7.abrupt("return", _context7.t0);
+
+                case 8:
+                case "end":
+                  return _context7.stop();
+              }
+            }
+          }, _callee7);
+        }));
+
+        function write(_x2, _x3) {
+          return _write.apply(this, arguments);
+        }
+
+        return write;
+      }(),
+      read: function () {
+        var _read = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(id) {
+          return runtime_1.wrap(function _callee8$(_context8) {
+            while (1) {
+              switch (_context8.prev = _context8.next) {
+                case 0:
+                  if (!swc) {
+                    _context8.next = 6;
+                    break;
+                  }
+
+                  _context8.next = 3;
+                  return readContract(arweave, id);
+
+                case 3:
+                  _context8.t0 = _context8.sent;
+                  _context8.next = 7;
+                  break;
+
+                case 6:
+                  _context8.t0 = "";
+
+                case 7:
+                  return _context8.abrupt("return", _context8.t0);
+
+                case 8:
+                case "end":
+                  return _context8.stop();
+              }
+            }
+          }, _callee8);
+        }));
+
+        function read(_x4) {
+          return _read.apply(this, arguments);
+        }
+
+        return read;
+      }()
+    }
+  };
+}
+
+function connectors(enabled, swc) {
+  return {
+    arweave: {},
+    connect: function connect(wallet, key) {
+      console.log(wallet);
+
+      switch (wallet) {
+        case "arweave":
+          if (enabled.indexOf(wallet) != -1) this.arweave = Arjs(key, swc);
+          break;
+
+        case "arconnect":
+          if (enabled.indexOf(wallet) != -1) this.arweave = Arc(key, swc);
+          break;
+
+        default:
+          if (enabled.indexOf("arweave") != -1) this.arweave = Arjs(key, swc);
+      }
+    }
+  };
+}
 
 var ArjsContextDefaultValues = {
   launch: function launch() {},
-  enabled: [],
-  swc: false
+  enabled: {
+    enabled: [],
+    enableSWC: false
+  },
+  wallet: /*#__PURE__*/connectors([], false)
 };
 var ArjsContext = /*#__PURE__*/createContext(ArjsContextDefaultValues);
 function useArjs() {
   return useContext(ArjsContext);
 }
 function ArjsProvider(_ref) {
-  var connectors = _ref.connectors,
-      enableSWC = _ref.enableSWC,
+  var connectors$1 = _ref.connectors,
+      _ref$enableSWC = _ref.enableSWC,
+      enableSWC = _ref$enableSWC === void 0 ? false : _ref$enableSWC,
       children = _ref.children;
 
   var _useState = useState([]),
@@ -1252,22 +1351,30 @@ function ArjsProvider(_ref) {
       swc = _useState2[0],
       setSwc = _useState2[1];
 
+  var _useState3 = useState(),
+      wallet = _useState3[0],
+      setWallet = _useState3[1];
+
   var list = [];
 
-  for (var connector in connectors) {
-    if (connector == "arweave" && connectors[connector] == true) list.push(connector);
-    if (connector == "arconnect" && connectors[connector] == true) list.push(connector);
+  for (var connector in connectors$1) {
+    if (connector == "arweave" && connectors$1[connector] == true) list.push(connector);
+    if (connector == "arconnect" && connectors$1[connector] == true) list.push(connector);
   }
 
   var launch = function launch() {
     setEnabled(list);
     setSwc(enableSWC);
+    setWallet(connectors(enabled, enableSWC));
   };
 
   var value = {
     launch: launch,
-    enabled: enabled,
-    swc: swc
+    enabled: {
+      enabled: enabled,
+      enableSWC: swc
+    },
+    wallet: wallet
   };
   return React.createElement(React.Fragment, null, React.createElement(ArjsContext.Provider, {
     value: value
