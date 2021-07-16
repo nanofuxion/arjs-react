@@ -21,7 +21,13 @@ export function Arc(key: any, swc: boolean) {
             logo
         })
         // @ts-ignore
-        const arweave = window.Arweave.init();
+        const arweave = window.Arweave.init({
+            host: "arweave.net",
+            port: 443,
+            protocol: "https",
+            timeout: 100000,
+            logging: false,
+        });
 
     return {
         transaction: function (data: any) {

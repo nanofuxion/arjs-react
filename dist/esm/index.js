@@ -809,13 +809,15 @@ var interactWrite = /*#__PURE__*/function () {
               name: "Contract-Src",
               value: contractId
             }];
-            _context.next = 3;
+            console.log(wallet);
+            console.log(input);
+            _context.next = 5;
             return interactWrite$1(arweave, wallet, contractId, input, tags);
 
-          case 3:
+          case 5:
             return _context.abrupt("return", _context.sent);
 
-          case 4:
+          case 6:
           case "end":
             return _context.stop();
         }
@@ -869,7 +871,13 @@ function Arc(key, swc) {
     logo: logo
   }); // @ts-ignore
 
-  var arweave = window.Arweave.init();
+  var arweave = window.Arweave.init({
+    host: "arweave.net",
+    port: 443,
+    protocol: "https",
+    timeout: 100000,
+    logging: false
+  });
   return {
     transaction: function transaction(data) {
       var transaction;
@@ -1086,10 +1094,17 @@ function Arc(key, swc) {
 }
 
 function Arjs(key, swc) {
-  var arweave;
+  var arweave; // @ts-ignore
+  // window.Arweave = null,window.arweaveWallet = null;
+
   arweave = Arweave.init({});
+  console.log(key);
   return {
-    transaction: function transaction(data) {
+    transaction: function transaction(data, _key) {
+      if (_key === void 0) {
+        _key = key;
+      }
+
       var transaction;
 
       _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
@@ -1098,7 +1113,7 @@ function Arjs(key, swc) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return arweave.createTransaction(data, key);
+                return arweave.createTransaction(data, _key);
 
               case 2:
                 return _context.abrupt("return", transaction = _context.sent);
@@ -1158,18 +1173,22 @@ function Arjs(key, swc) {
       }))();
     },
     sign: function () {
-      var _sign = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(transaction) {
+      var _sign = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(transaction, _key) {
         return runtime_1.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
+                if (_key === void 0) {
+                  _key = key;
+                }
+
                 _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4() {
                   return runtime_1.wrap(function _callee4$(_context4) {
                     while (1) {
                       switch (_context4.prev = _context4.next) {
                         case 0:
                           _context4.next = 2;
-                          return arweave.transactions.sign(transaction, key);
+                          return arweave.transactions.sign(transaction, _key);
 
                         case 2:
                           return _context4.abrupt("return", _context4.sent);
@@ -1182,7 +1201,7 @@ function Arjs(key, swc) {
                   }, _callee4);
                 }))();
 
-              case 1:
+              case 2:
               case "end":
                 return _context5.stop();
             }
@@ -1190,7 +1209,7 @@ function Arjs(key, swc) {
         }, _callee5);
       }));
 
-      function sign(_x) {
+      function sign(_x, _x2) {
         return _sign.apply(this, arguments);
       }
 
@@ -1222,31 +1241,30 @@ function Arjs(key, swc) {
     },
     smartweave: {
       write: function () {
-        var _write = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(input, id) {
+        var _write = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(input, id, _key) {
           return runtime_1.wrap(function _callee7$(_context7) {
             while (1) {
               switch (_context7.prev = _context7.next) {
                 case 0:
+                  if (_key === void 0) {
+                    _key = key;
+                  }
+
                   if (!swc) {
                     _context7.next = 6;
                     break;
                   }
 
-                  _context7.next = 3;
-                  return interactWrite(arweave, key, id, input);
+                  _context7.next = 4;
+                  return interactWrite(arweave, _key, id, input);
 
-                case 3:
-                  _context7.t0 = _context7.sent;
+                case 4:
                   _context7.next = 7;
                   break;
 
                 case 6:
-                  _context7.t0 = "";
 
                 case 7:
-                  return _context7.abrupt("return", _context7.t0);
-
-                case 8:
                 case "end":
                   return _context7.stop();
               }
@@ -1254,7 +1272,7 @@ function Arjs(key, swc) {
           }, _callee7);
         }));
 
-        function write(_x2, _x3) {
+        function write(_x3, _x4, _x5) {
           return _write.apply(this, arguments);
         }
 
@@ -1293,7 +1311,7 @@ function Arjs(key, swc) {
           }, _callee8);
         }));
 
-        function read(_x4) {
+        function read(_x6) {
           return _read.apply(this, arguments);
         }
 
@@ -1358,7 +1376,10 @@ function ArjsProvider(_ref) {
   var list = [];
 
   for (var connector in connectors$1) {
-    if (connector == "arweave" && connectors$1[connector] == true) list.push(connector);
+    if (connector == "arweave" && connectors$1[connector] == true) {
+      list.push(connector);
+    }
+
     if (connector == "arconnect" && connectors$1[connector] == true) list.push(connector);
   }
 

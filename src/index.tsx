@@ -40,8 +40,9 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
 
     let list:Array<any> = []; 
     for(const connector in connectors) {
-        if(connector == "arweave" && connectors[connector]==true)
+        if(connector == "arweave" && connectors[connector]==true){
         list.push(connector)
+    }
 
         if(connector == "arconnect" && connectors[connector]==true)
         list.push(connector)
