@@ -5,21 +5,21 @@ import { Arjs } from './arweave-js'
 
 export function connectors(enabled: Array<any>, swc: boolean) {
     return {
-        arweave: {},
-        connect: function (wallet: any, key: any) {
-            console.log(wallet)
+        // arweave: {},
+        connect: async function (wallet: any, key: any) {
+            // console.log(wallet)
             switch (wallet) {
                 case "arweave":
                     if (enabled.indexOf(wallet) != -1)
-                        this.arweave = Arjs(key, swc)
+                        this["arweave"] = await Arjs(key, swc)
                     break;
                 case "arconnect":
                     if (enabled.indexOf(wallet) != -1)
-                        this.arweave = Arc(key, swc)
+                    this["arweave"] = await Arc(key, swc)
                     break;
                 default:
-                    if (enabled.indexOf("arweave") != -1)
-                        this.arweave = Arjs(key, swc)
+                    if (enabled.indexOf(wallet) != -1)
+                    this["arweave"] = await Arc(key, swc)
             }
         }
     }

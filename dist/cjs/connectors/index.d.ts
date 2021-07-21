@@ -1,5 +1,4 @@
 export declare function connectors(enabled: Array<any>, swc: boolean): {
-    arweave: {};
-    connect: (wallet: any, key: any) => void;
+    connect: (wallet: any, key: any) => Promise<void>;
 };
 //# sourceMappingURL=index.d.ts.map

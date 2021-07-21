@@ -12,8 +12,9 @@ export declare function useArjs(): WalletContext;
 declare type Props = {
     connectors: object;
     enableSWC: boolean;
+    sessionType: string;
     children: ReactNode;
 };
 export { arConnector as connectors };
-export declare function ArjsProvider({ connectors, enableSWC, children }: Props): JSX.Element;
+export declare function ArjsProvider({ connectors, enableSWC, sessionType, children }: Props): JSX.Element;
 //# sourceMappingURL=index.d.ts.map

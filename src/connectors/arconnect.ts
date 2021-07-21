@@ -11,23 +11,17 @@ function getSafe(fn, defaultVal) {
     }
 }
 
-export function Arc(key: any, swc: boolean) {
+export async function Arc(key: any, swc: boolean) {
 
 
     let permissions = key.permissions, name = getSafe(key["name"], ""), logo = getSafe(key["logo"], "");
-    window.arweaveWallet.connect([...permissions],
-        {
-            name,
-            logo
-        })
-        // @ts-ignore
-        const arweave = window.Arweave.init({
-            host: "arweave.net",
-            port: 443,
-            protocol: "https",
-            timeout: 100000,
-            logging: false,
+    let aw: any = () => {};
+        window.addEventListener("arweaveWalletLoaded", async () => {
+            await window.arweaveWallet.connect([...permissions], { name, logo });
+            aw = window.arweaveWallet;
         });
+        // @ts-ignore
+        const arweave = await window.Arweave.init({ host: 'arweave.net' });
 
     return {
         transaction: function (data: any) {
@@ -72,8 +66,21 @@ export function Arc(key: any, swc: boolean) {
         write: async (input: any, id: string) => 
         (swc)? await interactWrite(arweave, 'use_wallet', id, input):"",
         read: async (id) => 
-        (swc)? await readContract(arweave, id):""
-        }
+        (swc)? await readContract(arweave, id):"",
+        },
+
+        getArweave: function () {
+            return arweave;
+        },
+
+        //arconnect specific 
+        disconnect: function () {
+            aw.disconnect();
+        },
+
+        getArweaveWallet: function () {
+            return aw;
+        },
 
     }
 }
