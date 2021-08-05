@@ -1,135 +1,106 @@
-import React, { useCallback, useEffect, createContext, useContext, ReactNode, useState, useMemo } from "react";
+import React, { useEffect, createContext, useContext, useState, useMemo, useCallback } from "react";
 import { connectors as arConnector } from './connectors/index';
 import { session } from './sesssionUtils/sessionStorage';
-
-
-type WalletContext = {
-    launch: () => void;
-    enabled: { enabled: any[]; enableSWC: boolean; }
-    wallet: any;
-} | null
-
-const ArjsContextDefaultValues: WalletContext = {
-
-
-    launch: () => { },
-    enabled: { enabled: [], enableSWC: false },
-    wallet: arConnector([], false),
-};
+import { WalletContext, Wallet, Props, Status, Provider } from './types'
 
 
 
-const ArjsContext = createContext<WalletContext>(ArjsContextDefaultValues);
 
-export function useArjs() {
-    return useContext(ArjsContext);
+const UseArjsContext = createContext<WalletContext>(null);
+
+export function useArjs(): Wallet {
+    const walletContext = useContext(UseArjsContext);
+
+    if (walletContext === null) {
+        throw new Error(
+            'useArjs() can only be used inside of <ArjsProvider />, ' +
+            'please declare it at a higher level.'
+        )
+    }
+
+    const { wallet, arweave } = walletContext
+    return useMemo(() => {
+        // @ts-ignore
+        return { ...arweave, ...wallet}
+    }, [wallet, arweave])
 }
-
-type Props = {
-    connectors: object;
-    enableSWC: boolean;
-    sessionType: string
-    children: ReactNode;
-};
 
 export { arConnector as connectors }
 
-export function ArjsProvider({ connectors, enableSWC = false, sessionType = "session", children }: Props) {
-    const [enabled, setEnabled] = useState<Array<any>>([]);
-    const [swc, setSwc] = useState<boolean>(false);
-    const [sess, setSess] = useState<Array<string>>([]);
-    const [isBusy, setIsBusy] = useState<boolean>(false);
-    const [wallet, setWallet] = useState<any>({});
+export function ArjsProvider({ connectors, enableSWC = false, children }: Props) {
+    const walletContext = useContext(UseArjsContext);
+
+    if (walletContext !== null) {
+        throw new Error('<ArjsProvider /> has already been declared.')
+    }
+    const [status, setStatus] = useState<Status>('disconnected'),
+    [provider,setProvider] = useState<Provider>('disconnected'),
+    [arweave, setArweave] = useState<any>({})
+    
 
     let list: Array<any> = [];
     for (const connector in connectors) {
-        if (connector == "arweave" && connectors[connector] == true) {
+        if (connector == "arweave" && connectors[connector]) {
             list.push(connector)
         }
 
-        if (connector == "arconnect" && connectors[connector] == true)
+        if (connector == "arconnect" && connectors[connector])
             list.push(connector)
     };
 
-    const launch = () => {
-        setEnabled(list);
-        setSwc(enableSWC)
-        setWallet(arConnector(enabled, enableSWC))
-    };
+    const [enabledList, setEnabledList] = useState<Array<string>>(list);
 
-
+    useEffect(() => {
+        setEnabledList(list);
+    }, [])
 
     let Aggr = useMemo(() => {
-        return arConnector(enabled, enableSWC);
-    }, [enabled]);
+        return arConnector(enabledList, enableSWC);
+    }, [enabledList]);
 
 
-    const activate = async (connector, perms, refresh = false) => {
-        await Aggr.connect(connector, perms).then(
-            /* @ts-ignore */
-            () => setWallet(Aggr.arweave)
-        );
-        console.log(perms)
-        if(refresh == false){
-            session.storageType((connector == "arweave") ? sessionType : "local");
-            session.setSession("walletSession", connector)
-            session.setSession("arweaveWallet", (connector == "arweave") ? perms: JSON.stringify(perms))
-        }
-    }
-
-    const disconnect = useCallback(async () => {
-        // (session.getSession("walletSession") == "arconnect") ? wallet.disconnect() : null;
+    const disconnect = useCallback(() => {
+        setStatus('disconnected');
         session.delSession("walletSession")
         session.delSession("arweaveWallet")
-        await setWallet({});
-        await setEnabled([]);
-    }, [wallet]);
+    }, []);
 
-    const value = {
-        launch,
-        enabled: { enabled, enableSWC: swc },
-        activate,
-        disconnect,
-        wallet,
-    };
+    const connect = useCallback(async (connector, perms) => {
+        disconnect()
+        setStatus('connecting');
+        setProvider(connector);
 
+            await Aggr.connectAr(connector, perms).then(async (result)=>{
+                await setArweave(await result);
+                setStatus('connected');
+            }).catch (err=>{ 
+                setStatus('failed')
+                throw `failed to connect to ${connector}: ${err}`
+            });
+    }, [disconnect])
 
-    if (typeof window !== 'undefined') {
-        if (typeof session.getSession("walletSession") == "string" &&
-            typeof session.getSession("arweaveWallet") == "string"
-            ) {
-
-            useEffect(() => {
-                console.log((session.getSession("walletSession")) ? 1 : 0)
-                setSess([session.getSession("walletSession"), session.getSession("arweaveWallet")])
-
-            }, []);
-
-            const callback = useCallback(async () => {
-                console.log(sess[0], sess[1])
-                launch();
-                (async () => {
-                    activate(sess[0], sess[1], true)
-                })();
-
-            }, [sess])
-
-            useEffect(() => {
-                if (!isBusy) {
-                    setIsBusy(true);
-                    callback();
-                    setIsBusy(false);
-                }
-            }, [callback]);
-
-        }
-    }
+    const wallet = useMemo(
+        () => ({
+            connect,
+            status,
+            arweave,
+            provider,
+            disconnect
+        }),
+        [
+            connect,
+            status,
+            arweave,
+            provider,
+            disconnect
+        ])
 
     return (
-        <>
-            <ArjsContext.Provider value={value}>
-                {children}
-            </ArjsContext.Provider>
-        </>
+        <UseArjsContext.Provider value={{
+            wallet,
+            arweave,
+        }}>
+            {children}
+        </UseArjsContext.Provider>
     );
 }

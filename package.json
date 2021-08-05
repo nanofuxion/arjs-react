@@ -1,8 +1,8 @@
 {
   "name": "arjs-react",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An Arweave.js dapp wallet aggregator for react. (similar to useWallet but for Arweave.) ",
-  "repository": "https://github.com/AeroProtocol/arjs-react.git",
+  "repository": "https://github.com/nanofuxion/arjs-react.git",
   "author": "Jordan Miller <ramnadroj@gmail.com>",
   "license": "MIT",
   "main": "dist/cjs/index.js",

@@ -1,4 +1,2 @@
-export declare function connectors(enabled: Array<any>, swc: boolean): {
-    connect: (wallet: any, key: any) => Promise<void>;
-};
+export declare function connectors(enabled: Array<any>, swc: boolean): any;
 //# sourceMappingURL=index.d.ts.map

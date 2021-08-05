@@ -1,20 +1,7 @@
-import { ReactNode } from "react";
+/// <reference types="react" />
 import { connectors as arConnector } from './connectors/index';
-declare type WalletContext = {
-    launch: () => void;
-    enabled: {
-        enabled: any[];
-        enableSWC: boolean;
-    };
-    wallet: any;
-} | null;
-export declare function useArjs(): WalletContext;
-declare type Props = {
-    connectors: object;
-    enableSWC: boolean;
-    sessionType: string;
-    children: ReactNode;
-};
+import { Wallet, Props } from './types';
+export declare function useArjs(): Wallet;
 export { arConnector as connectors };
-export declare function ArjsProvider({ connectors, enableSWC, sessionType, children }: Props): JSX.Element;
+export declare function ArjsProvider({ connectors, enableSWC, children }: Props): JSX.Element;
 //# sourceMappingURL=index.d.ts.map

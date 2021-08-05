@@ -1,25 +1,17 @@
 import { Arc } from './arconnect'
 import { Arjs } from './arweave-js'
 
-// let arweave: any;
-
-export function connectors(enabled: Array<any>, swc: boolean) {
+export function connectors(enabled: Array<any>, swc: boolean):any {
     return {
-        // arweave: {},
-        connect: async function (wallet: any, key: any) {
-            // console.log(wallet)
+        connectAr: async function (wallet: any, key: any) {
             switch (wallet) {
                 case "arweave":
-                    if (enabled.indexOf(wallet) != -1)
-                        this["arweave"] = await Arjs(key, swc)
-                    break;
+                    return (enabled.indexOf(wallet) != -1) ? 
+                    await Arjs(key, swc) : ""
                 case "arconnect":
-                    if (enabled.indexOf(wallet) != -1)
-                    this["arweave"] = await Arc(key, swc)
-                    break;
-                default:
-                    if (enabled.indexOf(wallet) != -1)
-                    this["arweave"] = await Arc(key, swc)
+                    return (enabled.indexOf(wallet) != -1) ? 
+                    await Arc(key, swc) : ""
+                default: throw new console.error("error here")
             }
         }
     }

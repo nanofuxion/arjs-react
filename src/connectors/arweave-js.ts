@@ -2,51 +2,35 @@ import Arweave from 'arweave';
 import Transaction from "arweave/web/lib/transaction";
 import { interactWrite, readContract } from "./smartweave";
 
-export async function Arjs(key: any, swc) {
-    let arweave: Arweave;
-    // @ts-ignore
-    // window.Arweave = null,window.arweaveWallet = null;
-    arweave = await Arweave.init({ host: 'arweave.net' });
-    console.log(key)
+let selfAddy: any =  "";
 
+export async function Arjs(key: any, swc: any) {
+    let arweave: Arweave = await Arweave.init({ host: 'arweave.net' });
+    key = (typeof key == 'string')? JSON.parse(key) : key;
+    if(!key['kty']) throw "Data Input is not a arweave key."
 
-    return {
-        transaction: function (data: any, _key: any = key) {
-            let transaction: any;
-            (async () =>
-                transaction = await arweave.createTransaction(data, _key)
-            )()
-            return transaction;
+        selfAddy = await new Promise (async resolve => resolve(await arweave.wallets.jwkToAddress(key)));
+
+        return ({
+
+        transaction: async function (data: any, _key: any = key) {
+            return await arweave.createTransaction(data, _key);
         },
 
-
-
-        post: function (transaction: Transaction) {
-            let response: any;
-            (async () =>
-                response = await arweave.transactions.post(transaction)
-            )()
-            return response;
+        post: async function (transaction: Transaction) {
+            return await arweave.transactions.post(transaction);
         },
 
         addTag: function (transaction: Transaction, name: string, value: string) {
-            (async () =>
-                await transaction.addTag(name, value)
-            )()
+            transaction.addTag(name, value);
         },
 
         sign: async function (transaction: Transaction, _key: any = key) {
-            (async () =>
-                await arweave.transactions.sign(transaction, _key)
-            )()
+            await arweave.transactions.sign(transaction, _key);
         },
 
-        submit: function (transaction: Transaction) {
-            let uploader: any;
-            (async () =>
-                uploader = await arweave.transactions.getUploader(transaction)
-            )()
-            return uploader;
+        submit: async function (transaction: Transaction) {
+            return await arweave.transactions.getUploader(transaction);
         },
 
         smartweave: {
@@ -60,5 +44,42 @@ export async function Arjs(key: any, swc) {
             return arweave;
         },
 
-    }
+        //arweave specific
+
+        getBalance: async function (this: any, walletID: string = 'self', setAttr: any = () => { }) {
+            // @ts-ignore
+            walletID = (walletID == 'self') ? selfAddy : walletID
+            console.log("self addy in getBalance: ",selfAddy)
+            return await new Promise (async (resolve) =>{
+                await arweave.wallets.getBalance(walletID).then((balance) => {
+                    setAttr(balance);
+                    resolve(balance)
+                })
+            });
+        },
+
+        getAddress: async function (this: any, setAttr: any = () => { }) {
+            return await new Promise (async (resolve) =>{
+                await arweave.wallets.jwkToAddress(key).then((addy) => {
+                    setAttr(addy)
+                    resolve(addy)
+                });
+            })
+        },
+
+    })
+// })(key)
 }
+
+
+(async ()=> {
+    let carDo;
+    new Promise (async () =>{
+        let car;
+        await setTimeout(() => {
+            car = "go Vroom"
+        }, 1000);
+        return car;
+    }).then(result=>carDo = result)
+    console.log(carDo)
+})
