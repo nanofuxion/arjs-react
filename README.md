@@ -2,7 +2,6 @@
 An Arweave.js dapp wallet aggregator for react. (similar to useWallet but for Arweave.) 
 
 ## Todos:
-* Add example project
 * Implement persistent sessions with [`"sesssionUtils/sessionStorage.ts"`](https://github.com/nanofuxion/arjs-react/blob/main/src/sesssionUtils/sessionStorage.ts)
 
 ## Usage: 
@@ -133,8 +132,7 @@ It returns an object representing the connected account (“wallet”), containi
 
 ## Examples
 
-To run the examples, switch to the respective directories. Then, simply run `yarn install`
-to install, and `yarn start` to run the examples on `localhost:1234`.
+To run the examples, switch to the respective directories. Then, simply run `yarn dev`.
 
 ## Special thanks
 
