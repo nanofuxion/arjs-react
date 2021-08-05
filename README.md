@@ -3,7 +3,7 @@ An Arweave.js dapp wallet aggregator for react. (similar to useWallet but for Ar
 
 ## Todos:
 * Add example project
-* Implement persistent sessions with [`"sesssionUtils/sessionStorage.ts"`](https://github.com/nanofuxion/arjs-react)
+* Implement persistent sessions with [`"sesssionUtils/sessionStorage.ts"`](https://github.com/nanofuxion/arjs-react/blob/main/src/sesssionUtils/sessionStorage.ts)
 
 ## Usage: 
 Add it to your project:
@@ -138,4 +138,4 @@ to install, and `yarn start` to run the examples on `localhost:1234`.
 
 ## Special thanks
 
-arjs-react is a greatly inspired by [useWallet()](https://github.com/aragon/use-wallet) and it's file structure, which are doing all the hard work internally.
+arjs-react is a greatly inspired by [useWallet()](https://github.com/aragon/use-wallet) and it's file structure.

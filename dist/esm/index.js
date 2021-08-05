@@ -1869,6 +1869,7 @@ function ArjsProvider(_ref) {
   }, [enabledList]);
   var disconnect = useCallback(function () {
     setStatus('disconnected');
+    setProvider('disconnected');
     session.delSession("walletSession");
     session.delSession("arweaveWallet");
   }, []);
@@ -1880,8 +1881,7 @@ function ArjsProvider(_ref) {
             case 0:
               disconnect();
               setStatus('connecting');
-              setProvider(connector);
-              _context2.next = 5;
+              _context2.next = 4;
               return Aggr.connectAr(connector, perms).then( /*#__PURE__*/function () {
                 var _ref3 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(result) {
                   return runtime_1.wrap(function _callee$(_context) {
@@ -1898,9 +1898,10 @@ function ArjsProvider(_ref) {
                           return (0, _context.t0)(_context.t1);
 
                         case 6:
+                          setProvider(connector);
                           setStatus('connected');
 
-                        case 7:
+                        case 8:
                         case "end":
                           return _context.stop();
                       }
@@ -1916,7 +1917,7 @@ function ArjsProvider(_ref) {
                 throw "failed to connect to " + connector + ": " + err;
               });
 
-            case 5:
+            case 4:
             case "end":
               return _context2.stop();
           }

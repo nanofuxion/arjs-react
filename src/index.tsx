@@ -61,6 +61,7 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
 
     const disconnect = useCallback(() => {
         setStatus('disconnected');
+        setProvider('disconnected');
         session.delSession("walletSession")
         session.delSession("arweaveWallet")
     }, []);
@@ -68,10 +69,10 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
     const connect = useCallback(async (connector, perms) => {
         disconnect()
         setStatus('connecting');
-        setProvider(connector);
 
             await Aggr.connectAr(connector, perms).then(async (result)=>{
                 await setArweave(await result);
+                setProvider(connector);
                 setStatus('connected');
             }).catch (err=>{ 
                 setStatus('failed')
