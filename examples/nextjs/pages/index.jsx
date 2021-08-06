@@ -19,7 +19,6 @@ export default function Home() {
 
   useEffect(() => {
     if (wallet.status == "connected") (async () => {
-      console.log(wallet)
       setBalance(wallet.getArweave().ar.winstonToAr(await wallet.getBalance("self")))
       setAddress(await wallet.getAddress())
     })()

@@ -880,10 +880,7 @@ function getSafe(fn, defaultVal) {
   }
 }
 
-var aw = function aw() {
-},
-    selfAddy = "";
-
+var selfAddy = "";
 function Arc(_x, _x2) {
   return _Arc.apply(this, arguments);
 }
@@ -902,30 +899,28 @@ function _Arc() {
                   while (1) {
                     switch (_context13.prev = _context13.next) {
                       case 0:
-                        aw = window.arweaveWallet;
-                        console.log(aw);
-                        _context13.prev = 3;
-                        _context13.next = 6;
+                        _context13.prev = 1;
+                        _context13.next = 4;
                         return window.arweaveWallet.connect([].concat(permissions), {
                           name: name,
                           logo: logo
                         });
 
-                      case 6:
-                        _context13.next = 11;
+                      case 4:
+                        _context13.next = 9;
                         break;
 
-                      case 8:
-                        _context13.prev = 8;
-                        _context13.t0 = _context13["catch"](3);
-                        console.info("connected");
+                      case 6:
+                        _context13.prev = 6;
+                        _context13.t0 = _context13["catch"](1);
+                        throw _context13.t0;
 
-                      case 11:
+                      case 9:
                       case "end":
                         return _context13.stop();
                     }
                   }
-                }, _callee13, null, [[3, 8]]);
+                }, _callee13, null, [[1, 6]]);
               }));
               return _awStat.apply(this, arguments);
             };
@@ -1214,7 +1209,6 @@ function _Arc() {
 
                           // @ts-ignore
                           walletID = walletID == 'self' ? selfAddy : walletID;
-                          console.log("self addy in getBalance: ", selfAddy);
                           return _context11.abrupt("return", new Promise( /*#__PURE__*/function () {
                             var _ref4 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee10(resolve) {
                               return runtime_1.wrap(function _callee10$(_context10) {
@@ -1240,7 +1234,7 @@ function _Arc() {
                             };
                           }()));
 
-                        case 5:
+                        case 4:
                         case "end":
                           return _context11.stop();
                       }
@@ -1313,82 +1307,82 @@ function Arjs(_x, _x2) {
 }
 
 function _Arjs() {
-  _Arjs = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee14(key, swc) {
+  _Arjs = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee12(key, swc) {
     var arweave;
-    return runtime_1.wrap(function _callee14$(_context14) {
+    return runtime_1.wrap(function _callee12$(_context12) {
       while (1) {
-        switch (_context14.prev = _context14.next) {
+        switch (_context12.prev = _context12.next) {
           case 0:
-            _context14.next = 2;
+            _context12.next = 2;
             return Arweave.init({
               host: 'arweave.net'
             });
 
           case 2:
-            arweave = _context14.sent;
+            arweave = _context12.sent;
             key = typeof key == 'string' ? JSON.parse(key) : key;
 
             if (key['kty']) {
-              _context14.next = 6;
+              _context12.next = 6;
               break;
             }
 
             throw "Data Input is not a arweave key.";
 
           case 6:
-            _context14.next = 8;
+            _context12.next = 8;
             return new Promise( /*#__PURE__*/function () {
-              var _ref3 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(resolve) {
-                return runtime_1.wrap(function _callee3$(_context3) {
+              var _ref = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(resolve) {
+                return runtime_1.wrap(function _callee$(_context) {
                   while (1) {
-                    switch (_context3.prev = _context3.next) {
+                    switch (_context.prev = _context.next) {
                       case 0:
-                        _context3.t0 = resolve;
-                        _context3.next = 3;
+                        _context.t0 = resolve;
+                        _context.next = 3;
                         return arweave.wallets.jwkToAddress(key);
 
                       case 3:
-                        _context3.t1 = _context3.sent;
-                        return _context3.abrupt("return", (0, _context3.t0)(_context3.t1));
+                        _context.t1 = _context.sent;
+                        return _context.abrupt("return", (0, _context.t0)(_context.t1));
 
                       case 5:
                       case "end":
-                        return _context3.stop();
+                        return _context.stop();
                     }
                   }
-                }, _callee3);
+                }, _callee);
               }));
 
               return function (_x3) {
-                return _ref3.apply(this, arguments);
+                return _ref.apply(this, arguments);
               };
             }());
 
           case 8:
-            selfAddy$1 = _context14.sent;
-            return _context14.abrupt("return", {
+            selfAddy$1 = _context12.sent;
+            return _context12.abrupt("return", {
               transaction: function () {
-                var _transaction = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(data, _key) {
-                  return runtime_1.wrap(function _callee4$(_context4) {
+                var _transaction = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2(data, _key) {
+                  return runtime_1.wrap(function _callee2$(_context2) {
                     while (1) {
-                      switch (_context4.prev = _context4.next) {
+                      switch (_context2.prev = _context2.next) {
                         case 0:
                           if (_key === void 0) {
                             _key = key;
                           }
 
-                          _context4.next = 3;
+                          _context2.next = 3;
                           return arweave.createTransaction(data, _key);
 
                         case 3:
-                          return _context4.abrupt("return", _context4.sent);
+                          return _context2.abrupt("return", _context2.sent);
 
                         case 4:
                         case "end":
-                          return _context4.stop();
+                          return _context2.stop();
                       }
                     }
-                  }, _callee4);
+                  }, _callee2);
                 }));
 
                 function transaction(_x4, _x5) {
@@ -1398,23 +1392,23 @@ function _Arjs() {
                 return transaction;
               }(),
               post: function () {
-                var _post = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(transaction) {
-                  return runtime_1.wrap(function _callee5$(_context5) {
+                var _post = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3(transaction) {
+                  return runtime_1.wrap(function _callee3$(_context3) {
                     while (1) {
-                      switch (_context5.prev = _context5.next) {
+                      switch (_context3.prev = _context3.next) {
                         case 0:
-                          _context5.next = 2;
+                          _context3.next = 2;
                           return arweave.transactions.post(transaction);
 
                         case 2:
-                          return _context5.abrupt("return", _context5.sent);
+                          return _context3.abrupt("return", _context3.sent);
 
                         case 3:
                         case "end":
-                          return _context5.stop();
+                          return _context3.stop();
                       }
                     }
-                  }, _callee5);
+                  }, _callee3);
                 }));
 
                 function post(_x6) {
@@ -1427,24 +1421,24 @@ function _Arjs() {
                 transaction.addTag(name, value);
               },
               sign: function () {
-                var _sign = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(transaction, _key) {
-                  return runtime_1.wrap(function _callee6$(_context6) {
+                var _sign = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(transaction, _key) {
+                  return runtime_1.wrap(function _callee4$(_context4) {
                     while (1) {
-                      switch (_context6.prev = _context6.next) {
+                      switch (_context4.prev = _context4.next) {
                         case 0:
                           if (_key === void 0) {
                             _key = key;
                           }
 
-                          _context6.next = 3;
+                          _context4.next = 3;
                           return arweave.transactions.sign(transaction, _key);
 
                         case 3:
                         case "end":
-                          return _context6.stop();
+                          return _context4.stop();
                       }
                     }
-                  }, _callee6);
+                  }, _callee4);
                 }));
 
                 function sign(_x7, _x8) {
@@ -1454,23 +1448,23 @@ function _Arjs() {
                 return sign;
               }(),
               submit: function () {
-                var _submit = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(transaction) {
-                  return runtime_1.wrap(function _callee7$(_context7) {
+                var _submit = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5(transaction) {
+                  return runtime_1.wrap(function _callee5$(_context5) {
                     while (1) {
-                      switch (_context7.prev = _context7.next) {
+                      switch (_context5.prev = _context5.next) {
                         case 0:
-                          _context7.next = 2;
+                          _context5.next = 2;
                           return arweave.transactions.getUploader(transaction);
 
                         case 2:
-                          return _context7.abrupt("return", _context7.sent);
+                          return _context5.abrupt("return", _context5.sent);
 
                         case 3:
                         case "end":
-                          return _context7.stop();
+                          return _context5.stop();
                       }
                     }
-                  }, _callee7);
+                  }, _callee5);
                 }));
 
                 function submit(_x9) {
@@ -1481,40 +1475,40 @@ function _Arjs() {
               }(),
               smartweave: {
                 write: function () {
-                  var _write = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(input, id, _key) {
-                    return runtime_1.wrap(function _callee8$(_context8) {
+                  var _write = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6(input, id, _key) {
+                    return runtime_1.wrap(function _callee6$(_context6) {
                       while (1) {
-                        switch (_context8.prev = _context8.next) {
+                        switch (_context6.prev = _context6.next) {
                           case 0:
                             if (_key === void 0) {
                               _key = key;
                             }
 
                             if (!swc) {
-                              _context8.next = 7;
+                              _context6.next = 7;
                               break;
                             }
 
-                            _context8.next = 4;
+                            _context6.next = 4;
                             return interactWrite(arweave, _key, id, input);
 
                           case 4:
-                            _context8.t0 = _context8.sent;
-                            _context8.next = 8;
+                            _context6.t0 = _context6.sent;
+                            _context6.next = 8;
                             break;
 
                           case 7:
-                            _context8.t0 = "";
+                            _context6.t0 = "";
 
                           case 8:
-                            return _context8.abrupt("return", _context8.t0);
+                            return _context6.abrupt("return", _context6.t0);
 
                           case 9:
                           case "end":
-                            return _context8.stop();
+                            return _context6.stop();
                         }
                       }
-                    }, _callee8);
+                    }, _callee6);
                   }));
 
                   function write(_x10, _x11, _x12) {
@@ -1524,36 +1518,36 @@ function _Arjs() {
                   return write;
                 }(),
                 read: function () {
-                  var _read = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee9(id) {
-                    return runtime_1.wrap(function _callee9$(_context9) {
+                  var _read = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee7(id) {
+                    return runtime_1.wrap(function _callee7$(_context7) {
                       while (1) {
-                        switch (_context9.prev = _context9.next) {
+                        switch (_context7.prev = _context7.next) {
                           case 0:
                             if (!swc) {
-                              _context9.next = 6;
+                              _context7.next = 6;
                               break;
                             }
 
-                            _context9.next = 3;
+                            _context7.next = 3;
                             return readContract(arweave, id);
 
                           case 3:
-                            _context9.t0 = _context9.sent;
-                            _context9.next = 7;
+                            _context7.t0 = _context7.sent;
+                            _context7.next = 7;
                             break;
 
                           case 6:
-                            _context9.t0 = "";
+                            _context7.t0 = "";
 
                           case 7:
-                            return _context9.abrupt("return", _context9.t0);
+                            return _context7.abrupt("return", _context7.t0);
 
                           case 8:
                           case "end":
-                            return _context9.stop();
+                            return _context7.stop();
                         }
                       }
-                    }, _callee9);
+                    }, _callee7);
                   }));
 
                   function read(_x13) {
@@ -1568,10 +1562,10 @@ function _Arjs() {
               },
               //arweave specific
               getBalance: function () {
-                var _getBalance = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee11(walletID, setAttr) {
-                  return runtime_1.wrap(function _callee11$(_context11) {
+                var _getBalance = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee9(walletID, setAttr) {
+                  return runtime_1.wrap(function _callee9$(_context9) {
                     while (1) {
-                      switch (_context11.prev = _context11.next) {
+                      switch (_context9.prev = _context9.next) {
                         case 0:
                           if (walletID === void 0) {
                             walletID = 'self';
@@ -1583,18 +1577,70 @@ function _Arjs() {
 
                           // @ts-ignore
                           walletID = walletID == 'self' ? selfAddy$1 : walletID;
-                          console.log("self addy in getBalance: ", selfAddy$1);
-                          _context11.next = 6;
+                          _context9.next = 5;
                           return new Promise( /*#__PURE__*/function () {
-                            var _ref4 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee10(resolve) {
+                            var _ref2 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee8(resolve) {
+                              return runtime_1.wrap(function _callee8$(_context8) {
+                                while (1) {
+                                  switch (_context8.prev = _context8.next) {
+                                    case 0:
+                                      _context8.next = 2;
+                                      return arweave.wallets.getBalance(walletID).then(function (balance) {
+                                        setAttr(balance);
+                                        resolve(balance);
+                                      });
+
+                                    case 2:
+                                    case "end":
+                                      return _context8.stop();
+                                  }
+                                }
+                              }, _callee8);
+                            }));
+
+                            return function (_x16) {
+                              return _ref2.apply(this, arguments);
+                            };
+                          }());
+
+                        case 5:
+                          return _context9.abrupt("return", _context9.sent);
+
+                        case 6:
+                        case "end":
+                          return _context9.stop();
+                      }
+                    }
+                  }, _callee9);
+                }));
+
+                function getBalance(_x14, _x15) {
+                  return _getBalance.apply(this, arguments);
+                }
+
+                return getBalance;
+              }(),
+              getAddress: function () {
+                var _getAddress = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee11(setAttr) {
+                  return runtime_1.wrap(function _callee11$(_context11) {
+                    while (1) {
+                      switch (_context11.prev = _context11.next) {
+                        case 0:
+                          if (setAttr === void 0) {
+                            setAttr = function setAttr() {};
+                          }
+
+                          _context11.next = 3;
+                          return new Promise( /*#__PURE__*/function () {
+                            var _ref3 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee10(resolve) {
                               return runtime_1.wrap(function _callee10$(_context10) {
                                 while (1) {
                                   switch (_context10.prev = _context10.next) {
                                     case 0:
                                       _context10.next = 2;
-                                      return arweave.wallets.getBalance(walletID).then(function (balance) {
-                                        setAttr(balance);
-                                        resolve(balance);
+                                      return arweave.wallets.jwkToAddress(key).then(function (addy) {
+                                        setAttr(addy);
+                                        resolve(addy);
                                       });
 
                                     case 2:
@@ -1605,73 +1651,20 @@ function _Arjs() {
                               }, _callee10);
                             }));
 
-                            return function (_x16) {
-                              return _ref4.apply(this, arguments);
+                            return function (_x18) {
+                              return _ref3.apply(this, arguments);
                             };
                           }());
 
-                        case 6:
+                        case 3:
                           return _context11.abrupt("return", _context11.sent);
 
-                        case 7:
+                        case 4:
                         case "end":
                           return _context11.stop();
                       }
                     }
                   }, _callee11);
-                }));
-
-                function getBalance(_x14, _x15) {
-                  return _getBalance.apply(this, arguments);
-                }
-
-                return getBalance;
-              }(),
-              getAddress: function () {
-                var _getAddress = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee13(setAttr) {
-                  return runtime_1.wrap(function _callee13$(_context13) {
-                    while (1) {
-                      switch (_context13.prev = _context13.next) {
-                        case 0:
-                          if (setAttr === void 0) {
-                            setAttr = function setAttr() {};
-                          }
-
-                          _context13.next = 3;
-                          return new Promise( /*#__PURE__*/function () {
-                            var _ref5 = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee12(resolve) {
-                              return runtime_1.wrap(function _callee12$(_context12) {
-                                while (1) {
-                                  switch (_context12.prev = _context12.next) {
-                                    case 0:
-                                      _context12.next = 2;
-                                      return arweave.wallets.jwkToAddress(key).then(function (addy) {
-                                        setAttr(addy);
-                                        resolve(addy);
-                                      });
-
-                                    case 2:
-                                    case "end":
-                                      return _context12.stop();
-                                  }
-                                }
-                              }, _callee12);
-                            }));
-
-                            return function (_x18) {
-                              return _ref5.apply(this, arguments);
-                            };
-                          }());
-
-                        case 3:
-                          return _context13.abrupt("return", _context13.sent);
-
-                        case 4:
-                        case "end":
-                          return _context13.stop();
-                      }
-                    }
-                  }, _callee13);
                 }));
 
                 function getAddress(_x17) {
@@ -1684,10 +1677,10 @@ function _Arjs() {
 
           case 10:
           case "end":
-            return _context14.stop();
+            return _context12.stop();
         }
       }
-    }, _callee14);
+    }, _callee12);
   }));
   return _Arjs.apply(this, arguments);
 }

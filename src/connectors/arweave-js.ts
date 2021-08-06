@@ -49,7 +49,6 @@ export async function Arjs(key: any, swc: any) {
         getBalance: async function (this: any, walletID: string = 'self', setAttr: any = () => { }) {
             // @ts-ignore
             walletID = (walletID == 'self') ? selfAddy : walletID
-            console.log("self addy in getBalance: ",selfAddy)
             return await new Promise (async (resolve) =>{
                 await arweave.wallets.getBalance(walletID).then((balance) => {
                     setAttr(balance);
@@ -68,18 +67,5 @@ export async function Arjs(key: any, swc: any) {
         },
 
     })
-// })(key)
 }
 
-
-(async ()=> {
-    let carDo;
-    new Promise (async () =>{
-        let car;
-        await setTimeout(() => {
-            car = "go Vroom"
-        }, 1000);
-        return car;
-    }).then(result=>carDo = result)
-    console.log(carDo)
-})

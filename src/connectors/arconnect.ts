@@ -8,8 +8,7 @@ function getSafe(fn, defaultVal) {
         return defaultVal;
     }
 }
-let aw: any = () => { getActiveAddress: Function}, 
-    selfAddy: any =  "",
+let selfAddy: any =  "",
     setAw: boolean = false;
 
 export async function Arc(key: any, swc: boolean) {
@@ -18,13 +17,11 @@ export async function Arc(key: any, swc: boolean) {
     logo = getSafe(key["logo"], "");
 
     async function awStat(){
-        aw = window.arweaveWallet;
-        console.log(aw)
         setAw == true;
         try {
             await window.arweaveWallet.connect([...permissions], { name, logo });
         } catch (error) {
-            console.info("connected")
+            throw error
         }
     }
     window.addEventListener("arweaveWalletLoaded", async () => {
@@ -85,7 +82,6 @@ export async function Arc(key: any, swc: boolean) {
         getBalance: async function (this: any, walletID: string = 'self', setAttr: any = () => { }) {
             // @ts-ignore
             walletID = (walletID == 'self') ? selfAddy : walletID
-            console.log("self addy in getBalance: ",selfAddy)
             return new Promise (async (resolve) =>{
                 await arweave.wallets.getBalance(walletID).then((balance) => {
                     setAttr(balance);
