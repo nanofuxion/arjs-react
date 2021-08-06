@@ -8,7 +8,7 @@ An Arweave.js dapp wallet aggregator for react. (similar to useWallet but for Ar
 Add it to your project:
 
 ```console
-yarn add nanofuxion/arjs-react 
+yarn add arjs-react 
 ```
 
 
