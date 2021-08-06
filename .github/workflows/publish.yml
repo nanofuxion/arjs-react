@@ -1,12 +1,13 @@
-name: "🚀 release"
+name: "🚀  publish"
 
 on:
-    release:
-        types: [published]
+    push:
+        branches: 
+          - main
 
 jobs:
     release:
-        name: 🚀 release
+        name: 🚀 publish
         runs-on: ubuntu-latest
         steps:
             - name: 📚 checkout
