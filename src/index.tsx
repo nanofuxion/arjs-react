@@ -1,10 +1,8 @@
+import { arType } from "/types";
 import React, { useEffect, createContext, useContext, useState, useMemo, useCallback } from "react";
 import { connectors as arConnector } from './connectors/index';
-import { session } from './sesssionUtils/sessionStorage';
+// import { session } from './sesssionUtils/sessionStorage';
 import { WalletContext, Wallet, Props, Status, Provider } from './types'
-
-
-
 
 const UseArjsContext = createContext<WalletContext>(null);
 
@@ -21,7 +19,7 @@ export function useArjs(): Wallet {
     const { wallet, arweave } = walletContext
     return useMemo(() => {
         // @ts-ignore
-        return { ...arweave, ...wallet}
+        return  { ...arweave, ...wallet}
     }, [wallet, arweave])
 }
 
@@ -35,7 +33,9 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
     }
     const [status, setStatus] = useState<Status>('disconnected'),
     [provider,setProvider] = useState<Provider>('disconnected'),
-    [arweave, setArweave] = useState<any>({})
+    [arweave, setArweave] = useState<arType>(null),
+    [isloading,setIsloading] = useState<number>(0)
+
     
 
     let list: Array<any> = [];
@@ -52,7 +52,23 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
 
     useEffect(() => {
         setEnabledList(list);
-    }, [])
+    }, []);
+
+    const loadStatus = useCallback(
+        (action: string) => {
+            switch (action) {
+                case "sub":
+                    setIsloading(isloading - 1)
+                    return isloading;
+                case "add":
+                    setIsloading(isloading + 1)
+                    return isloading;
+                default: throw "error at loadStatus = useCallback"
+            }
+        },
+        [
+            isloading
+        ])
 
     let Aggr = useMemo(() => {
         return arConnector(enabledList, enableSWC);
@@ -60,17 +76,23 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
 
 
     const disconnect = useCallback(() => {
+        setIsloading(0);
         setStatus('disconnected');
         setProvider('disconnected');
-        session.delSession("walletSession")
-        session.delSession("arweaveWallet")
-    }, []);
+        // session.delSession("walletSession")
+        // session.delSession("arweaveWallet")
+    }, [            
+        status,
+        arweave,
+        provider,
+        isloading,
+        loadStatus
+    ]);
 
     const connect = useCallback(async (connector, perms) => {
         disconnect()
         setStatus('connecting');
-
-            await Aggr.connectAr(connector, perms).then(async (result)=>{
+            await Aggr.connectAr(connector, loadStatus, perms).then(async (result)=>{
                 await setArweave(await result);
                 setProvider(connector);
                 setStatus('connected');
@@ -80,12 +102,18 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
             });
     }, [disconnect])
 
-    const wallet = useMemo(
+    const ready = (startFunc) => useEffect(() => {
+        if(status == "connected")startFunc()
+    },[status,arweave])
+
+    const wallet: Wallet = useMemo(
         () => ({
             connect,
             status,
             arweave,
             provider,
+            ready,
+            isloading,
             disconnect
         }),
         [
@@ -93,6 +121,8 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
             status,
             arweave,
             provider,
+            isloading,
+            loadStatus,
             disconnect
         ])
 

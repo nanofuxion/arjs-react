@@ -1,1 +1,1 @@
-{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../src/connectors/index.ts"],"names":[],"mappings":"AAGA,wBAAgB,UAAU,CAAC,OAAO,EAAE,KAAK,CAAC,GAAG,CAAC,EAAE,GAAG,EAAE,OAAO,GAAE,GAAG,CAchE"}
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../src/connectors/index.ts"],"names":[],"mappings":"AAGA,wBAAgB,UAAU,CAAC,SAAS,EAAE,KAAK,CAAC,GAAG,CAAC,EAAE,GAAG,EAAE,OAAO,GAAE,GAAG,CAYlE"}

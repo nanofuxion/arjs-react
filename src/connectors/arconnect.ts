@@ -1,72 +1,109 @@
-import Transaction from "arweave/node/lib/transaction";
-import { interactWrite, readContract } from "./smartweave";
+import Arweave from 'arweave';
+import { interactWrite, readContract, interactRead } from "./smartweave";
+import { arcType } from './types';
 
-function getSafe(fn, defaultVal) {
+
+function getSafe(fn: () => any, defaultVal: string) {
     try {
         return fn();
     } catch (e) {
         return defaultVal;
     }
 }
-let selfAddy: any =  "",
+let selfAddy: string,
     setAw: boolean = false;
 
-export async function Arc(key: any, swc: boolean) {
-    let permissions = getSafe(key["permissions"], ["ACCESS_ADDRESS"]), 
+export async function Arc(key: { [x: string]: any; permissions: any }, loadStatus: (arg0: string) => any, swc: boolean) {
+    let permissions = key.permissions, 
     name = getSafe(key["name"], ""), 
     logo = getSafe(key["logo"], "");
 
     async function awStat(){
         setAw == true;
         try {
-            await window.arweaveWallet.connect([...permissions], { name, logo });
+            await window.arweaveWallet.connect([...permissions, "ACCESS_ADDRESS"], { name, logo });
         } catch (error) {
             throw error
         }
     }
-    window.addEventListener("arweaveWalletLoaded", async () => {
-        await awStat()
-    })
 
-    await setTimeout(async () => {
-        if(!setAw){
-            await awStat()
+    let arweave: Arweave;
+    let Arw: Arweave;
+
+    async function setArweave(){
+        Arw = await Arweave.init({ host: 'arweave.net' });
+        // @ts-ignore
+        let arweaveBase : Arweave = await window.Arweave.init({ host: 'arweave.net' });
+        arweave = arweaveBase;
+        arweave.blocks = Arw.blocks;
+        selfAddy = await new Promise (async resolve => resolve(await window.arweaveWallet.getActiveAddress()));
+    }
+
+    // await window.addEventListener("arweaveWalletLoaded", async () => {
+    //     await awStat().then(async ()=>{
+    //         await setTimeout(async () => {
+    //         let Arw: Arweave = await Arweave.init({ host: 'arweave.net' });
+    //         // @ts-ignore
+    //         let arweaveBase: Arweave = await window.Arweave.init({ host: 'arweave.net' });
+    //         arweave = arweaveBase;
+    //         arweave.blocks = Arw.blocks;
+    //         selfAddy = await new Promise (async resolve => resolve(await window.arweaveWallet.getActiveAddress()));
+    //         }, 1000);
+    //     })
+    // })
+    if(!setAw){
+            await awStat().then(async ()=> await setArweave())
         }
-    }, 1000);
-
-    // @ts-ignore
-    const arweave = await window.Arweave.init({ host: 'arweave.net' });
-    selfAddy = await new Promise (async resolve => resolve(await window.arweaveWallet.getActiveAddress()));
-    
 
 
-    return ({
 
-        transaction: async function (data: any) {
+        return await <arcType>{
+
+        transaction: async function (data) {
             return await arweave.createTransaction(data)
         },
 
-        post: async function (transaction: Transaction) {
+        post: async function (transaction) {
             return await arweave.transactions.post(transaction)
         },
 
-        addTag: function (transaction: Transaction, name: string, value: string) {
+        addTag: function (transaction, name, value) {
             transaction.addTag(name, value)
         },
 
-        sign: async function (transaction: Transaction) {
+        sign: async function (transaction) {
             await arweave.transactions.sign(transaction)
         },
 
-        submit: async function (transaction: Transaction) {
+        submit: async function (transaction) {
             return await arweave.transactions.getUploader(transaction)
         },
 
         smartweave: {
-            write: async (input: any, id: string) =>
-                (swc) ? await interactWrite(arweave, 'use_wallet', id, input) : "",
-            read: async (id) =>
-                (swc) ? await readContract(arweave, id) : "",
+            write: async (input, id) =>{
+                let data:any;
+                await loadStatus("add");
+                (swc) ? await interactWrite(arweave, 'use_wallet', id, input)
+                .then(result => data = result) : ""
+                await loadStatus("sub");
+                return data;
+                },
+            iread: async (input, id) =>{
+                let data:any;
+                await loadStatus("add");
+                (swc) ? await interactRead(arweave, 'use_wallet', id, input)
+                .then(result => data = result) : ""
+                await loadStatus("sub");
+                return data;
+                },
+            read: async (id) =>{
+                let data:any;
+                await loadStatus("add");
+                (swc) ? await readContract(arweave, id)
+                .then(result => data = result) : ""
+                await loadStatus("sub");
+                return data;
+            },
         },
 
         getArweave: function () {
@@ -74,33 +111,33 @@ export async function Arc(key: any, swc: boolean) {
         },
 
         //arconnect specific 
-
+ 
         disconnect: function () {
             window.arweaveWallet.disconnect();
         },
 
-        getBalance: async function (this: any, walletID: string = 'self', setAttr: any = () => { }) {
+        getBalance: async function (this: any, walletID = 'self', setAttr = () => { }) {
             // @ts-ignore
             walletID = (walletID == 'self') ? selfAddy : walletID
             return new Promise (async (resolve) =>{
-                await arweave.wallets.getBalance(walletID).then((balance) => {
+                await Arw.wallets.getBalance(walletID).then((balance) => {
                     setAttr(balance);
                     resolve(balance)
                 })
             });
         },
-        getAddress: function (setAttr: any = () => { }) {
+        getAddress: function (setAttr = () => { }) {
             return new Promise(async (resolve) => {
                 try {
                     await window.arweaveWallet.getActiveAddress().then(res => {
-                        setAttr(res)
-                        resolve(res)
+                        setAttr(res);
+                        resolve(res);
                     });
                 } catch (error) {
-                    resolve(selfAddy)
-                    setAttr(selfAddy)
+                    resolve(selfAddy);
+                    setAttr(selfAddy);
                 }
             })
         },
-    })
+    }
 }
