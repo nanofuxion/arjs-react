@@ -19,7 +19,12 @@ export async function Arjs(key: any, loadStatus: any, swc: any) {
         },
 
         post: async function (transaction) {
-            return await arweave.transactions.post(transaction);
+            let data:any;
+            await loadStatus("add");
+            await arweave.transactions.post(transaction)
+            .then(result => data = result)
+            await loadStatus("sub");
+            return data;
         },
 
         addTag: function (transaction, name: string, value: string) {

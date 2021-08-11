@@ -45,9 +45,15 @@ export default function Home() {
     let transaction = await wallet.transaction({
       target: 'a5_du7BfZ3aCqAjVYWROr1uFogvX1O5oN-rMTV3GB1I',
       quantity: wallet.getArweave().ar.arToWinston(sum)
-  });
+    });
   
-  await wallet.sign(transaction, key);
+    await wallet.sign(transaction);
+    const confirm = wallet.post(transaction);
+    console.log(transaction);
+    if(confirm["status"] = 200)
+    setCstate(`Transaction pending, \nThank you for your generosity 🙏`);
+    else 
+    setCstate(`Transaction Failed, \nPlease check the console if there is an error and update the developer.`);
   }
 
   useEffect(() => { 

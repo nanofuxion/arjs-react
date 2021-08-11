@@ -64,7 +64,12 @@ export async function Arc(key: { [x: string]: any; permissions: any }, loadStatu
         },
 
         post: async function (transaction) {
-            return await arweave.transactions.post(transaction)
+            let data:any;
+            await loadStatus("add");
+            await arweave.transactions.post(transaction)
+            .then(result => data = result)
+            await loadStatus("sub");
+            return data;
         },
 
         addTag: function (transaction, name, value) {
