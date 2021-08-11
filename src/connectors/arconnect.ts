@@ -72,7 +72,9 @@ export async function Arc(key: { [x: string]: any; permissions: any }, loadStatu
         },
 
         sign: async function (transaction) {
-            await arweave.transactions.sign(transaction)
+            await loadStatus("add");
+            await arweave.transactions.sign(transaction);
+            await loadStatus("sub");
         },
 
         submit: async function (transaction) {

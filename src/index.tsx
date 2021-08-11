@@ -18,7 +18,6 @@ export function useArjs(): Wallet {
 
     const { wallet, arweave } = walletContext
     return useMemo(() => {
-        // @ts-ignore
         return  { ...arweave, ...wallet}
     }, [wallet, arweave])
 }

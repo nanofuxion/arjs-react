@@ -27,7 +27,9 @@ export async function Arjs(key: any, loadStatus: any, swc: any) {
         },
 
         sign: async function (transaction, _key: any = key) {
+            await loadStatus("add");
             await arweave.transactions.sign(transaction, _key);
+            await loadStatus("sub");
         },
 
         submit: async function (transaction) {

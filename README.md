@@ -104,18 +104,20 @@ Configuration for the different connectors. accepts a `key:` dapp wallet name wi
 This is the hook to be used throughout the app. 
 It returns an object representing the connected account (“wallet”), containing:
 
-- `connect(connectorId, arg)`: call this function with a connector ID to “connect” to a provider (see above for the connectors provided by default) and an `arg` which can either be the `arconnect` permissions to request or the wallet `key` to initialize "Arweave.js".
-- `ready(callback)` : runs a function once a wallet is selected and the wallet has completed loading it's dependencies. `useCallback` with `[arweave, status]` as dependents.
+- `connect(connectorId, arg)`: Call this function with a connector ID to “connect” to a provider (see above for the connectors provided by default) and an `arg` which can either be the `arconnect` permissions to request or the wallet `key` to initialize "Arweave.js".
+- `ready(callback)` : Runs a function once a wallet is selected and the wallet has completed loading it's dependencies. `useCallback` with `[arweave, status]` as dependents.
 - `connector`: The "key" of the wallet you're connected to (e.g "arweave", "arconnect").
-- `connectors`: the full list of connectors.
-- `disconnect()`: call this function to “disconnect” from the current provider. This will this will not disconnect `arconnect` to disconnect from `arconnect` use `arweave.disconnect()` in the `wallet` object.
-- `status`: contains the current status of the wallet connection. The possible values are:
+- `connectors`: The full list of connectors.
+- `disconnect()`: Call this function to “disconnect” from the current provider. This will this will not disconnect `arconnect` to disconnect from `arconnect` use `arweave.disconnect()` in the `wallet` object.
+- `status`: Contains the current status of the wallet connection. The possible values are:
   - "disconnected": no wallet connected (default state).
   - "connecting": trying to connect to the wallet.
   - "connected": connected to the wallet (i.e. the account is available).
   - "failed": a connection error happened.
 - All the children of `arweave` shown below except `disconnect` are available directly in the `wallet` object
 - `arweave`: 
+- `isloading`: Integer 
+- `loadStatus`: 
     - `transaction(data):` returns `arweave.createTransaction(data)`
     - `post(transaction):` returns `arweave.transactions.post(transaction)`
     - `addTag(transaction, name, value):` returns `transaction.addTag(name, value)`

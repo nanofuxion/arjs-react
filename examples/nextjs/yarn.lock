@@ -415,9 +415,10 @@ aria-query@^4.2.2:
     "@babel/runtime" "^7.10.2"
     "@babel/runtime-corejs3" "^7.10.2"
 
-arjs-react@nanofuxion/arjs-react:
-  version "0.0.2"
-  resolved "https://codeload.github.com/nanofuxion/arjs-react/tar.gz/561da9149c8825092b5cbd3ef0efef2074222313"
+arjs-react@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/arjs-react/-/arjs-react-0.0.5.tgz#2171e2eabd8234b482d20b9bb66be8ec835da691"
+  integrity sha512-WTW/YIkl5+vEvEUa2aPKwlreEddqjYlXSLrOt21l2c7mDby5ZL+g/KIaAMFaOh1cZqtW6TbXbp3lT6epXlTspQ==
   dependencies:
     arweave "^1.10.15"
     smartweave "^0.4.38"

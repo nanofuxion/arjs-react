@@ -8,6 +8,7 @@ export default function Home() {
   const [key, setKey] = useState(""),
     [cinput, setCinput] = useState(""),
     [swinput, setSWinput] = useState(""),
+    [doninput, setDoninput] = useState(0.0000),
     [rinput, setRinput] = useState(""),
     [cstate, setCstate] = useState("");
 
@@ -22,17 +23,17 @@ export default function Home() {
       setBalance(wallet.getArweave().ar.winstonToAr(await wallet.getBalance("self")))
       setAddress(await wallet.getAddress())
     })()
-  })
+  });
 
   useEffect(() => {
     console.log(cstate)
-  },[cstate])
+  },[cstate]);
 
   async function getKey(e) {
     let file = e.target.files[0], res;
     await readFile(file).then(result => res = result)
     setKey(res)
-  }
+  };
 
   const finput = useRef();
 
@@ -40,18 +41,22 @@ export default function Home() {
     finput.current.value = "";
   };
 
-  function getCinput(e) {
-    setCinput(e.target.value)
-  }
-  function getRinput(e) {
-    setRinput(e.target.value)
-  }
-  function getSWinput(e) {
-    setSWinput(e.target.value)
+  const don = async (sum) => {
+    let transaction = await wallet.transaction({
+      target: 'a5_du7BfZ3aCqAjVYWROr1uFogvX1O5oN-rMTV3GB1I',
+      quantity: wallet.getArweave().ar.arToWinston(sum)
+  });
+  
+  await wallet.sign(transaction, key);
   }
 
+  useEffect(() => { 
+    document.querySelector("body").classList.add("bg-gray-600");
+    document.querySelector("body").classList.add("md:bg-white") 
+});
+
   return (
-    <div className='container mx-auto'>
+    <div className='container mx-auto bg-gray-600 md:bg-white'>
       <Head>
         <title>arjs-react + next.js Example</title>
         <meta charSet={"UTF-8"} />
@@ -112,7 +117,7 @@ export default function Home() {
               <input
                 className='rounded-lg h-8 md:place-self-auto text-black px-2 border-2 border-gray-900 col-span-2 mt-5 md:mt-0'
                 type="text"
-                onChange={getCinput}
+                onChange={(e) => { setCinput(e.target.value) }}
               />
               <button className={((wallet.status != 'connected')?
               'bg-gray-600 text-gray-500 rounded-lg px-4 border-2 border-gray-500 col-span-1':
@@ -131,11 +136,11 @@ export default function Home() {
                 type="text"
                 value={rinput}
                 placeholder={'Contract Address'}
-                onChange={getRinput}
+                onChange={(e) => { setRinput(e.target.value) }}
               />
               <button className={((wallet.status != 'connected')?
-              'bg-gray-600 text-gray-500 rounded-lg px-4 border-2 border-gray-500 col-span-1 row-span-4':
-              'bg-gray-300 text-black rounded-lg px-4 border-2 border-gray-900 col-span-1 row-span-4')}
+              'bg-gray-600 text-gray-500 rounded-lg px-1 border-2 border-gray-500 col-span-1 row-span-4':
+              'bg-gray-300 text-black rounded-lg px-1 border-2 border-gray-900 col-span-1 row-span-4')}
                 onClick={async () => setCstate(await wallet.smartweave.iread(swinput, rinput))}
                 disabled={(wallet.status != 'connected')}>
                 Submit SW Transaction
@@ -145,10 +150,31 @@ export default function Home() {
                 type="text"
                 value={swinput}
                 placeholder={'Contract Input JSON'}
-                onChange={getSWinput}
+                onChange={(e) => { setSWinput(e.target.value) }}
               />
+            </div>            
+            <div className='grid grid-cols-3  gap-x-2 gap-y-0 mt-2 pb-2'>
+              <label className='font-bold col-span-3'>
+              Feeling generous? Donate to the Developer:
+              </label>
+              <div className='grid grid-cols-6 rounded-lg h-8 md:place-self-auto text-black border-2 border-gray-900 col-span-1 overflow-hidden' >
+                <input type="number" className="col-span-4 h-full text-center"
+                value={doninput}
+                onChange={(e) => { setDoninput(e.target.value) }}
+                ></input>
+                <div className="grid place-content-center col-span-2 border-l-2 border-black bg-gray-600">
+                    <span className="text-white font-bold mx-2"> AR </span>
+                </div>
+              </div>
+              <button className={((wallet.status != 'connected')?
+              'bg-gray-600 text-gray-500 rounded-lg px-4 border-2 border-gray-500 col-span-2':
+              'bg-gray-300 text-black rounded-lg px-4 border-2 border-gray-900 col-span-2')}
+                onClick={async () => don(doninput)}
+                disabled={(wallet.status != 'connected')}>
+                Submit Transaction
+              </button>
             </div>
-            <pre className='col-span-3 mx-auto pt-8 rounded lg bg-gray-900 overflow-scroll h-full w-full max-h-48 max-w-2xl'>{JSON.stringify(cstate, null, 2)}</pre>
+            <pre className='col-span-3 mx-auto pt-8 px-2 rounded lg bg-gray-900 overflow-scroll h-full w-full max-h-48 max-w-2xl'>{JSON.stringify(cstate, null, 2)}</pre>
           </div>
         </div>
       </main>
