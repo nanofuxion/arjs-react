@@ -116,8 +116,8 @@ It returns an object representing the connected account (“wallet”), containi
   - "failed": a connection error happened.
 - All the children of `arweave` shown below except `disconnect` are available directly in the `wallet` object
 - `arweave`: 
-- `isloading`: Integer 
-- `loadStatus`: 
+- `isloading`: Integer that increases when `smartweave.write` `smartweave.read` `smartweave.iread` `wallet.sign` and decreases once the functions completes execution.
+- `loadStatus("add" | "sub")`:  `loadStatus("add")` increments `isloading` by one, `loadStatus("sub")` decrements `isloading` by one.
     - `transaction(data):` returns `arweave.createTransaction(data)`
     - `post(transaction):` returns `arweave.transactions.post(transaction)`
     - `addTag(transaction, name, value):` returns `transaction.addTag(name, value)`
