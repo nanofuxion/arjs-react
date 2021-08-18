@@ -1,10 +1,14 @@
 import { arType } from "/types";
 import React, { useEffect, createContext, useContext, useState, useMemo, useCallback } from "react";
 import { connectors as arConnector } from './connectors/index';
+import { readContract } from "./connectors/smartweave";
 // import { session } from './sesssionUtils/sessionStorage';
 import { WalletContext, Wallet, Props, Status, Provider } from './types'
+import Arweave from "arweave";
 
 const UseArjsContext = createContext<WalletContext>(null);
+
+let incrementor = 0;
 
 export function useArjs(): Wallet {
     const walletContext = useContext(UseArjsContext);
@@ -24,7 +28,7 @@ export function useArjs(): Wallet {
 
 export { arConnector as connectors }
 
-export function ArjsProvider({ connectors, enableSWC = false, children }: Props) {
+export function ArjsProvider({ connectors, enableSWC = false, pollingRate = 5000, children }: Props) {
     const walletContext = useContext(UseArjsContext);
 
     if (walletContext !== null) {
@@ -33,9 +37,11 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
     const [status, setStatus] = useState<Status>('disconnected'),
     [provider,setProvider] = useState<Provider>('disconnected'),
     [arweave, setArweave] = useState<arType>(null),
-    [isloading,setIsloading] = useState<number>(0)
+    // [dir,setDir] = useState<string>(''),
+    [isloading,setIsloading] = useState<number>(0);
+    // [balance,setBalance] = useState<string | any>("0");
 
-    
+    // let balance: string = "0";
 
     let list: Array<any> = [];
     for (const connector in connectors) {
@@ -53,26 +59,26 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
         setEnabledList(list);
     }, []);
 
-    const loadStatus = useCallback(
-        (action: string) => {
-            switch (action) {
-                case "sub":
-                    setIsloading(isloading - 1)
-                    return isloading;
-                case "add":
-                    setIsloading(isloading + 1)
-                    return isloading;
-                default: throw "error at loadStatus = useCallback"
-            }
-        },
-        [
-            isloading
-        ])
-
     let Aggr = useMemo(() => {
         return arConnector(enabledList, enableSWC);
     }, [enabledList]);
 
+    const loadStatus = async (action: string) => {
+
+            switch (action) {
+                case "add":
+                    incrementor = incrementor + 1;
+                    setIsloading(incrementor)
+                    break;
+                case "sub":
+                    incrementor = incrementor - 1;
+                    ((isloading - 1) == -1)? 
+                    setIsloading(0): 
+                    setIsloading(incrementor)
+                    break;
+                default: break;
+            }
+    }
 
     const disconnect = useCallback(() => {
         setIsloading(0);
@@ -84,12 +90,12 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
         status,
         arweave,
         provider,
+        loadStatus,
         isloading,
-        loadStatus
     ]);
 
     const connect = useCallback(async (connector, perms) => {
-        disconnect()
+        // disconnect()
         setStatus('connecting');
             await Aggr.connectAr(connector, loadStatus, perms).then(async (result)=>{
                 await setArweave(await result);
@@ -99,11 +105,48 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
                 setStatus('failed')
                 throw `failed to connect to ${connector}: ${err}`
             });
-    }, [disconnect])
+    }, [disconnect, loadStatus]);
+
+    const poll = (pollFunc, rate: number = pollingRate) => useEffect(() => {
+        if(status == "connected"){
+            pollFunc();
+        const tick = () =>{
+            pollFunc();
+        }
+        if(rate != null){
+            const id = setInterval(tick, rate);
+            return () => {
+                clearInterval(id);
+            };
+        }
+    }
+        return;
+    }, [pollingRate,status,arweave])
 
     const ready = (startFunc) => useEffect(() => {
-        if(status == "connected")startFunc()
-    },[status,arweave])
+        if(status == "connected"){
+            startFunc()
+        }
+    },[status,arweave]);
+
+
+    const smartweave = {
+
+        read: async (id: string) =>{
+            let arweave: Arweave = await Arweave.init({ host: 'arweave.net' });
+            let data:any;
+            loadStatus("add");
+            try {
+                (enableSWC) ? await readContract(arweave, id)
+            .then(result => data = result) : ""
+            } catch (error) {
+                data = "";
+            }
+            loadStatus("sub");
+            return data;
+        },
+    }
+
 
     const wallet: Wallet = useMemo(
         () => ({
@@ -112,6 +155,8 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
             arweave,
             provider,
             ready,
+            poll,
+            smartweave,
             isloading,
             disconnect
         }),
@@ -122,8 +167,9 @@ export function ArjsProvider({ connectors, enableSWC = false, children }: Props)
             provider,
             isloading,
             loadStatus,
-            disconnect
+            disconnect,
         ])
+
 
     return (
         <UseArjsContext.Provider value={{

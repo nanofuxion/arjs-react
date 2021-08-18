@@ -9,6 +9,7 @@ export declare type Wallet = {
     arweave: arType;
     provider: Provider;
     ready: (startFunc: any) => void;
+    poll: (pollFunc: any) => void;
     isloading: number;
     disconnect: () => void;
 };
@@ -20,6 +21,7 @@ export declare type Props = {
     connectors: object;
     enableSWC: boolean;
     sessionType: string;
+    pollingRate: number;
     children: ReactNode;
 };
 //# sourceMappingURL=types.d.ts.map

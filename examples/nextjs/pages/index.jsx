@@ -5,6 +5,7 @@ import { readFile } from "../src/readFile";
 import { useRef } from "react";
 
 export default function Home() {
+
   const [key, setKey] = useState(""),
     [cinput, setCinput] = useState(""),
     [swinput, setSWinput] = useState(""),
@@ -18,11 +19,12 @@ export default function Home() {
   const [balance, setBalance] = useState("N/A");
   const [address, setAddress] = useState("N/A");
 
-  wallet.ready(() => {
-    if (wallet.status == "connected") (async () => {
-      setBalance(wallet.getArweave().ar.winstonToAr(await wallet.getBalance("self")))
+  wallet.ready(async () => {
       setAddress(await wallet.getAddress())
-    })()
+  });
+
+  wallet.poll(async () => {
+      setBalance(wallet.getArweave().ar.winstonToAr(await wallet.getBalance("self")))
   });
 
   useEffect(() => {
@@ -36,7 +38,6 @@ export default function Home() {
   };
 
   const finput = useRef();
-
   const reset = () => {
     finput.current.value = "";
   };
@@ -50,10 +51,19 @@ export default function Home() {
     await wallet.sign(transaction);
     const confirm = wallet.post(transaction);
     console.log(transaction);
+    const successMsg = 
+`Transaction pending, 
+Thank you for your generosity 🙏  
+Transaction ID:
+${transaction.id}`
+    const errorMsg = 
+`Transaction Failed, 
+Please check the console if there is an error and update the developer.`
+
     if(confirm["status"] = 200)
-    setCstate(`Transaction pending, \nThank you for your generosity 🙏`);
+    setCstate(successMsg);
     else 
-    setCstate(`Transaction Failed, \nPlease check the console if there is an error and update the developer.`);
+    setCstate(errorMsg);
   }
 
   useEffect(() => { 
@@ -69,7 +79,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
         <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"></link>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
       </Head>
       <main className='bg-gray-600 rounded-3xl p-8 text-white max-w-xl mx-auto my-4'>
         <div>
@@ -81,7 +91,7 @@ export default function Home() {
             <h2 className='h-6 font-bold bg-gray-600'>Connected Wallet: {(wallet.provider != 'disconnected')?wallet.provider: 'none'}</h2>
           </div>
           <div className='h-16 col-span-3'>
-            <h2 className='h-8 font-bold bg-gray-700 px-2 pt-0.5 rounded-lg border-2 border-gray-500 mb-1 whitespace-nowrap overflow-scroll md:overflow-auto'>Addy: {(wallet.provider != 'disconnected')?address: 'N/A'}</h2>
+            <h2 className='h-8 font-bold bg-gray-700 px-2 pt-0.5 rounded-lg border-2 border-gray-500 mb-1 whitespace-nowrap overflow-scroll md:overflow-hidden'>Addy: {(wallet.provider != 'disconnected')?address: 'N/A'}</h2>
             <h2 className='h-8 font-bold bg-gray-700 px-2 pt-0.5 rounded-lg border-2 border-gray-500 overflow-scroll md:overflow-auto'>Balance: {(wallet.provider != 'disconnected')?balance: 'N/A'}</h2>
           </div>
         </div>
@@ -93,6 +103,7 @@ export default function Home() {
               <input
                 className='rounded-lg px-2 border-2 bg-gray-300 border-gray-900 text-black col-span-2'
                 type="file"
+                accept=".json"
                 onChange={getKey}
                 ref={finput}
               />
@@ -117,7 +128,7 @@ export default function Home() {
               </button>
             </div>
             <div className='grid grid-cols-3  gap-x-2 gap-y-0  pb-2'>
-              <label className='font-bold col-span-3'>
+              <label className='font-bold col-span-3 -mb-2'>
                 SW Contract ID:
               </label>
               <input
@@ -125,11 +136,16 @@ export default function Home() {
                 type="text"
                 onChange={(e) => { setCinput(e.target.value) }}
               />
-              <button className={((wallet.status != 'connected')?
+              <button className={((wallet.isloading > 0)?
               'bg-gray-600 text-gray-500 rounded-lg px-4 border-2 border-gray-500 col-span-1':
               'bg-gray-300 text-black rounded-lg px-4 border-2 border-gray-900 col-span-1')}
-                onClick={async () => setCstate(await wallet.smartweave.read(cinput))}
-                disabled={(wallet.status != 'connected')}>
+                onClick={async () => {
+                  console.log(wallet.isloading)
+                  setCstate(await wallet.smartweave.read(cinput))
+                  console.log(wallet.isloading)
+                }}
+                disabled={(wallet.isloading > 0)}
+                >
                 Read Contract
               </button>
             </div>
@@ -144,11 +160,12 @@ export default function Home() {
                 placeholder={'Contract Address'}
                 onChange={(e) => { setRinput(e.target.value) }}
               />
-              <button className={((wallet.status != 'connected')?
+              <button className={((wallet.status != 'connected' || wallet.isloading > 0)?
               'bg-gray-600 text-gray-500 rounded-lg px-1 border-2 border-gray-500 col-span-1 row-span-4':
               'bg-gray-300 text-black rounded-lg px-1 border-2 border-gray-900 col-span-1 row-span-4')}
-                onClick={async () => setCstate(await wallet.smartweave.iread(swinput, rinput))}
-                disabled={(wallet.status != 'connected')}>
+                onClick={async () => setCstate(await wallet.smartweave.write(swinput, rinput))}
+                disabled={(wallet.status != 'connected' || wallet.isloading > 0)}
+                >
                 Submit SW Transaction
               </button>
               <input
@@ -164,23 +181,32 @@ export default function Home() {
               Feeling generous? Donate to the Developer:
               </label>
               <div className='grid grid-cols-6 rounded-lg h-8 md:place-self-auto text-black border-2 border-gray-900 col-span-1 overflow-hidden' >
-                <input type="number" className="col-span-4 h-full text-center"
+                <input type="number" className="col-span-4 h-full text-center rounded-r-none"
                 value={doninput}
                 onChange={(e) => { setDoninput(e.target.value) }}
-                ></input>
+                >
+                </input>
                 <div className="grid place-content-center col-span-2 border-l-2 border-black bg-gray-600">
                     <span className="text-white font-bold mx-2"> AR </span>
                 </div>
               </div>
-              <button className={((wallet.status != 'connected')?
+              <button className={((wallet.status != 'connected' || wallet.isloading > 0)?
               'bg-gray-600 text-gray-500 rounded-lg px-4 border-2 border-gray-500 col-span-2':
               'bg-gray-300 text-black rounded-lg px-4 border-2 border-gray-900 col-span-2')}
                 onClick={async () => don(doninput)}
-                disabled={(wallet.status != 'connected')}>
+                disabled={(wallet.status != 'connected' || wallet.isloading > 0)}
+                >
                 Submit Transaction
               </button>
             </div>
-            <pre className='col-span-3 mx-auto pt-8 px-2 rounded lg bg-gray-900 overflow-scroll h-full w-full max-h-48 max-w-2xl'>{JSON.stringify(cstate, null, 2)}</pre>
+            <pre className='col-span-3 mx-auto pt-8 px-2 rounded lg bg-gray-900 overflow-scroll h-full w-full max-h-48 max-w-2xl'>
+              {(() => { 
+                if(typeof cstate != 'string')
+                  return JSON.stringify(cstate, null, 2)
+                else
+                  return cstate
+              })()}
+              </pre>
           </div>
         </div>
       </main>

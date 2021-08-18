@@ -1,4 +1,5 @@
 import React from 'react';
+import 'tailwindcss/tailwind.css'
 import { ArjsProvider } from 'arjs-react'
 
 function MyApp({ Component, pageProps }) {

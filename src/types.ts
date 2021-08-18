@@ -12,6 +12,7 @@ export type Wallet ={
     arweave: arType;
     provider: Provider;
     ready: (startFunc: any) => void;
+    poll: (pollFunc: any) => void;
     isloading: number;
     disconnect: () => void;
 };
@@ -24,6 +25,7 @@ export type WalletContext = {
 export type Props = {
     connectors: object;
     enableSWC: boolean;
-    sessionType: string
+    sessionType: string;
+    pollingRate: number;
     children: ReactNode;
 };

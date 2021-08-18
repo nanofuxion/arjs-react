@@ -45,25 +45,45 @@ export async function Arjs(key: any, loadStatus: any, swc: any) {
             write: async (input: any, id: string, _key: any = key) =>{
                 let data:any;
                 await loadStatus("add");
-                (swc) ? await interactWrite(arweave, _key, id, input)
+                try {
+                    (swc) ? await interactWrite(arweave, _key, id, input)
                 .then(result => data = result) : ""
-                await loadStatus("sub");
+                } catch (error) {
+                    data = "";
+                }
+                finally{
+                    await loadStatus("sub");
+                }
+                
                 return data;
             },
             iread: async (input: any, id: string, _key: any = key) =>{
                 let data:any;
                 await loadStatus("add");
-                (swc) ? await interactRead(arweave, _key, id, input)
+                try {
+                    (swc) ? await interactRead(arweave, _key, id, input)
                 .then(result => data = result) : ""
-                await loadStatus("sub");
+                } catch (error) {
+                    data = "";
+                }
+                finally{
+                    await loadStatus("sub");
+                }
                 return data;
             },
             read: async (id: string) =>{
                 let data:any;
-                loadStatus("add");
-                (swc) ? await readContract(arweave, id)
+                
+                try {
+                    await loadStatus("add");
+                    (swc) ? await readContract(arweave, id)
                 .then(result => data = result) : ""
-                loadStatus("sub");
+                } catch (error) {
+                    data = "";
+                }
+                finally{
+                    await loadStatus("sub");
+                }
                 return data;
             },
         },

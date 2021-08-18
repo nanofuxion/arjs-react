@@ -87,28 +87,46 @@ export async function Arc(key: { [x: string]: any; permissions: any }, loadStatu
         },
 
         smartweave: {
-            write: async (input, id) =>{
+            write: async (input: any, id: string, _key: any = 'use_wallet') =>{
                 let data:any;
                 await loadStatus("add");
-                (swc) ? await interactWrite(arweave, 'use_wallet', id, input)
+                try {
+                    (swc) ? await interactWrite(arweave, _key, id, input)
                 .then(result => data = result) : ""
-                await loadStatus("sub");
+                } catch (error) {
+                    data = "";
+                }
+                finally{
+                    loadStatus("sub");
+                }
                 return data;
-                },
-            iread: async (input, id) =>{
+            },
+            iread: async (input: any, id: string, _key: any = 'use_wallet') =>{
                 let data:any;
                 await loadStatus("add");
-                (swc) ? await interactRead(arweave, 'use_wallet', id, input)
+                try {
+                    (swc) ? await interactRead(arweave, _key, id, input)
                 .then(result => data = result) : ""
-                await loadStatus("sub");
+                } catch (error) {
+                    data = "";
+                }
+                finally{
+                    loadStatus("sub");
+                }
                 return data;
-                },
-            read: async (id) =>{
+            },
+            read: async (id: string) =>{
                 let data:any;
-                await loadStatus("add");
-                (swc) ? await readContract(arweave, id)
+                loadStatus("add");
+                try {
+                    (swc) ? await readContract(arweave, id)
                 .then(result => data = result) : ""
-                await loadStatus("sub");
+                } catch (error) {
+                    data = "";
+                }
+                finally{
+                    loadStatus("sub");
+                }
                 return data;
             },
         },
