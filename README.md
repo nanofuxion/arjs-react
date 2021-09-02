@@ -11,10 +11,15 @@ Add it to your project:
 yarn add arjs-react 
 ```
 
+example project hosted on the permaweb:
+
+```
+https://arweave.net:443/s4v69mVyr3AX53GT0u2ofAfGotw_ba1-YFXuRWEoL6M
+```
 
 Use it in your React app:
 
-```jsx
+```jsx 
 //App.js
 
 import React, { useState, useEffect, useMemo } from 'react'
