@@ -1,11 +1,11 @@
 import Arweave from 'arweave';
 import { interactWrite, readContract, interactRead } from "./smartweave";
-import { arjsType } from './types';
+import { arjsType, gateway } from './types';
 
 let selfAddy: any =  "";
 
-export async function Arjs(key: any, loadStatus: any, swc: any) {
-    let arweave: Arweave = await Arweave.init({ host: 'arweave.net' });
+export async function Arjs(key: any, loadStatus: any, swc: any, gateway: gateway) {
+    let arweave: Arweave = await Arweave.init( gateway );
     console.log(arweave)
     key = (typeof key == 'string')? JSON.parse(key) : key;
     if(!key['kty']) throw "Data Input is not a arweave key."
@@ -42,11 +42,11 @@ export async function Arjs(key: any, loadStatus: any, swc: any) {
         },
 
         smartweave: {
-            write: async (input: any, id: string, _key: any = key) =>{
+            write: async (input: any, id: string, _key: any = key, tags?, target?, winstonQty?) =>{
                 let data:any;
                 await loadStatus("add");
                 try {
-                    (swc) ? await interactWrite(arweave, _key, id, input)
+                    (swc) ? await interactWrite(arweave, _key, id, input, tags, target, winstonQty)
                 .then(result => data = result) : ""
                 } catch (error) {
                     data = "";
@@ -57,11 +57,11 @@ export async function Arjs(key: any, loadStatus: any, swc: any) {
                 
                 return data;
             },
-            iread: async (input: any, id: string, _key: any = key) =>{
+            iread: async (input: any, id: string, _key: any = key, tags?, target?, winstonQty?) =>{
                 let data:any;
                 await loadStatus("add");
                 try {
-                    (swc) ? await interactRead(arweave, _key, id, input)
+                    (swc) ? await interactRead(arweave, _key, id, input, tags, target, winstonQty)
                 .then(result => data = result) : ""
                 } catch (error) {
                     data = "";

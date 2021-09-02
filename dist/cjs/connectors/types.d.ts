@@ -42,4 +42,9 @@ export declare type arjsType = {
     getBalance: (this: any, walletID?: string, setAttr?: any) => Promise<unknown>;
     getAddress: (this: any, setAttr?: any) => Promise<unknown>;
 };
+export declare type gateway = {
+    host: '127.0.0.1' | string;
+    port: number;
+    protocol: 'http' | 'https';
+} | {};
 //# sourceMappingURL=types.d.ts.map

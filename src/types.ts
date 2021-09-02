@@ -1,4 +1,4 @@
-import { arcType, arjsType } from "connectors/types";
+import { arcType, arjsType, gateway } from "connectors/types";
 import { ReactNode } from "react";
 
 export type Status = 'connected' | 'disconnected' | 'connecting' | 'failed'
@@ -27,5 +27,6 @@ export type Props = {
     enableSWC: boolean;
     sessionType: string;
     pollingRate: number;
+    gateway: gateway;
     children: ReactNode;
 };

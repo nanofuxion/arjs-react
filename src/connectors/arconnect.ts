@@ -1,6 +1,6 @@
 import Arweave from 'arweave';
 import { interactWrite, readContract, interactRead } from "./smartweave";
-import { arcType } from './types';
+import { arcType, gateway } from './types';
 
 
 function getSafe(fn: () => any, defaultVal: string) {
@@ -13,7 +13,7 @@ function getSafe(fn: () => any, defaultVal: string) {
 let selfAddy: string,
     setAw: boolean = false;
 
-export async function Arc(key: { [x: string]: any; permissions: any }, loadStatus: (arg0: string) => any, swc: boolean) {
+export async function Arc(key: { [x: string]: any; permissions: any }, loadStatus: (arg0: string) => any, swc: boolean, gateway: gateway) {
     let permissions = key.permissions, 
     name = getSafe(key["name"], ""), 
     logo = getSafe(key["logo"], "");
@@ -31,9 +31,9 @@ export async function Arc(key: { [x: string]: any; permissions: any }, loadStatu
     let Arw: Arweave;
 
     async function setArweave(){
-        Arw = await Arweave.init({ host: 'arweave.net' });
+        Arw = await Arweave.init( gateway );
         // @ts-ignore
-        let arweaveBase : Arweave = await window.Arweave.init({ host: 'arweave.net' });
+        let arweaveBase : Arweave = await window.Arweave.init( gateway );
         arweave = arweaveBase;
         arweave.blocks = Arw.blocks;
         selfAddy = await new Promise (async resolve => resolve(await window.arweaveWallet.getActiveAddress()));
@@ -87,11 +87,11 @@ export async function Arc(key: { [x: string]: any; permissions: any }, loadStatu
         },
 
         smartweave: {
-            write: async (input: any, id: string, _key: any = 'use_wallet') =>{
+            write: async (input: any, id: string, _key: any = 'use_wallet', tags?, target?, winstonQty?) =>{
                 let data:any;
                 await loadStatus("add");
                 try {
-                    (swc) ? await interactWrite(arweave, _key, id, input)
+                    (swc) ? await interactWrite(arweave, _key, id, input, tags, target, winstonQty)
                 .then(result => data = result) : ""
                 } catch (error) {
                     data = "";
@@ -101,11 +101,11 @@ export async function Arc(key: { [x: string]: any; permissions: any }, loadStatu
                 }
                 return data;
             },
-            iread: async (input: any, id: string, _key: any = 'use_wallet') =>{
+            iread: async (input: any, id: string, _key: any = 'use_wallet', tags?, target?, winstonQty?) =>{
                 let data:any;
                 await loadStatus("add");
                 try {
-                    (swc) ? await interactRead(arweave, _key, id, input)
+                    (swc) ? await interactRead(arweave, _key, id, input, tags, target, winstonQty)
                 .then(result => data = result) : ""
                 } catch (error) {
                     data = "";

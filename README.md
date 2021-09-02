@@ -83,7 +83,7 @@ export default App
 
 ### &lt;ArjsProvider />
 
-This is the provider component. It should be placed above any component using `useArjs()`. Apart from `children`, it accepts two other props:
+This is the provider component. It should be placed above any component using `useArjs()`. Apart from `children`, it can accept four other props:
 
 
 #### enableSWC
@@ -97,6 +97,11 @@ Defaults to `false`.
 Configuration for the different connectors. accepts a `key:` dapp wallet name with a truthy `value`, may accept wallet configurations when new wallets are added.
 - `arweave`: `{}`
 - `arconnect`: `{}`
+
+### gateway
+
+Gateway accepts an abject with the arweave gateway parameters identical to the input for `Arweave.init({})`, if not implemented the code will default to `arweave.net`. This can be useful for use with a testnet (testnet interoperability untested) 
+
 
 ### pollRate
 
@@ -130,7 +135,7 @@ It returns an object representing the connected account (“wallet”), containi
     - `sign(transaction):` returns `arweave.transactions.getUploader(transaction)`
     - `smartweave:` returns:
       - `write(input, id)` executes  `interactWrite(arweave, wallet, id, input)`
-      - `read(id)` executes  `readContract(arweave, id)`
+      - `read(id)` executes  `readContract(arweave, id)` (Can be executed without initializing a wallet.)
       - `iread(id)` executes `interactRead(arweave, wallet, id, input)` 
       - [click here](https://github.com/ArweaveTeam/SmartWeave/blob/master/SDK.md) for Smartweave SDK readme.
     - `getArweave`: returns "the `Arweave.js object` provided by the connected wallet."

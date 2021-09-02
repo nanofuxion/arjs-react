@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "packed":"cd out; inline-script-tags index.html 1.html; inline-stylesheets 1.html 2.html; inline-images 2.html packed.html",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -11,6 +12,7 @@
   "dependencies": {
     "arjs-react": "link:../..",
     "git": "^0.1.5",
+    "inline-scripts": "^1.7.4",
     "next": "10.1.3",
     "react": "link:../../node_modules/react",
     "react-bootstrap": "^1.6.1",

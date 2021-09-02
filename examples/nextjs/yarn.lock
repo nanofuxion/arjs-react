@@ -2062,6 +2062,11 @@ inherits@2.0.3:
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
   integrity sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=
 
+inline-scripts@^1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/inline-scripts/-/inline-scripts-1.7.4.tgz#54f4d5d9a3e830d4c31e9bb59bf12783a516351d"
+  integrity sha512-iEuBe8HfhzNlllODod145vW+hh1HJv/aGXkSq6dsDa/m0fmos8UGmtilmu8LykABqJWVGCP2qRexo6VqpL0OZA==
+
 inquirer@^7.3.3:
   version "7.3.3"
   resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-7.3.3.tgz#04d176b2af04afc157a83fd7c100e98ee0aad003"

@@ -28,7 +28,7 @@ export function useArjs(): Wallet {
 
 export { arConnector as connectors }
 
-export function ArjsProvider({ connectors, enableSWC = false, pollingRate = 5000, children }: Props) {
+export function ArjsProvider({ connectors, enableSWC = false, pollingRate = 5000, gateway = { host: 'arweave.net' }, children }: Props) {
     const walletContext = useContext(UseArjsContext);
 
     if (walletContext !== null) {
@@ -97,7 +97,7 @@ export function ArjsProvider({ connectors, enableSWC = false, pollingRate = 5000
     const connect = useCallback(async (connector, perms) => {
         // disconnect()
         setStatus('connecting');
-            await Aggr.connectAr(connector, loadStatus, perms).then(async (result)=>{
+            await Aggr.connectAr(connector, loadStatus, perms, gateway).then(async (result)=>{
                 await setArweave(await result);
                 setProvider(connector);
                 setStatus('connected');

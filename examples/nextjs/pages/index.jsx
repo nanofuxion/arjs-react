@@ -78,7 +78,6 @@ Please check the console if there is an error and update the developer.`
         <meta charSet={"UTF-8"} />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
-        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"></link>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
       </Head>
       <main className='bg-gray-600 rounded-3xl p-8 text-white max-w-xl mx-auto my-4'>
@@ -128,17 +127,17 @@ Please check the console if there is an error and update the developer.`
               </button>
             </div>
             <div className='grid grid-cols-3  gap-x-2 gap-y-0  pb-2'>
-              <label className='font-bold col-span-3 -mb-2'>
+              <label className='font-bold col-span-3'>
                 SW Contract ID:
               </label>
               <input
-                className='rounded-lg h-8 md:place-self-auto text-black px-2 border-2 border-gray-900 col-span-2 mt-5 md:mt-0'
+                className='rounded-lg h-8 md:place-self-auto text-black px-2 border-2 border-gray-900 col-span-2 md:mt-0'
                 type="text"
                 onChange={(e) => { setCinput(e.target.value) }}
               />
               <button className={((wallet.isloading > 0)?
-              'bg-gray-600 text-gray-500 rounded-lg px-4 border-2 border-gray-500 col-span-1':
-              'bg-gray-300 text-black rounded-lg px-4 border-2 border-gray-900 col-span-1')}
+              'bg-gray-600 text-gray-500 rounded-lg px-4 border-2 border-gray-500 col-span-1 truncate':
+              'bg-gray-300 text-black rounded-lg px-4 border-2 border-gray-900 col-span-1 truncate')}
                 onClick={async () => {
                   console.log(wallet.isloading)
                   setCstate(await wallet.smartweave.read(cinput))
