@@ -3,6 +3,11 @@ import { ReactNode } from "react";
 export declare type Status = 'connected' | 'disconnected' | 'connecting' | 'failed';
 export declare type Provider = 'arweave' | 'arconnect' | 'disconnected';
 export declare type arType = arjsType | arcType | null;
+export declare type smartweave = {
+    write: (input: any, id: string, _key?: any) => Promise<any>;
+    iread: (input: any, id: string, _key?: any) => Promise<any>;
+    read: (id: string) => Promise<any>;
+};
 export declare type Wallet = {
     connect: (connector: any, perms: any) => Promise<void>;
     status: Status;
@@ -12,6 +17,7 @@ export declare type Wallet = {
     poll: (pollFunc: any) => void;
     isloading: number;
     disconnect: () => void;
+    smartweave: smartweave;
 };
 export declare type WalletContext = {
     wallet: Wallet;

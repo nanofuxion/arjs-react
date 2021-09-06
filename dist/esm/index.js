@@ -2068,6 +2068,8 @@ function useArjs() {
   var wallet = walletContext.wallet,
       arweave = walletContext.arweave;
   return useMemo(function () {
+    if (wallet.status == "connected") //@ts-ignore
+      delete wallet.smartweave;
     return _extends({}, arweave, wallet);
   }, [wallet, arweave]);
 }
@@ -2256,7 +2258,7 @@ function ArjsProvider(_ref) {
     }, [status, arweave]);
   };
 
-  var smartweave = {
+  var sweave = {
     read: function () {
       var _read = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(id) {
         var arweave, data;
@@ -2316,6 +2318,58 @@ function ArjsProvider(_ref) {
       }
 
       return read;
+    }(),
+    write: function () {
+      var _write = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee5() {
+        return runtime_1.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.next = 2;
+                return null;
+
+              case 2:
+                return _context5.abrupt("return", _context5.sent);
+
+              case 3:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }));
+
+      function write() {
+        return _write.apply(this, arguments);
+      }
+
+      return write;
+    }(),
+    iread: function () {
+      var _iread = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee6() {
+        return runtime_1.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _context6.next = 2;
+                return null;
+
+              case 2:
+                return _context6.abrupt("return", _context6.sent);
+
+              case 3:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6);
+      }));
+
+      function iread() {
+        return _iread.apply(this, arguments);
+      }
+
+      return iread;
     }()
   };
   var wallet = useMemo(function () {
@@ -2326,7 +2380,7 @@ function ArjsProvider(_ref) {
       provider: provider,
       ready: ready,
       poll: poll,
-      smartweave: smartweave,
+      smartweave: sweave,
       isloading: isloading,
       disconnect: disconnect
     };

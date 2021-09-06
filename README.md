@@ -14,7 +14,7 @@ yarn add arjs-react
 example project hosted on the permaweb:
 
 ```
-https://arweave.net:443/s4v69mVyr3AX53GT0u2ofAfGotw_ba1-YFXuRWEoL6M
+https://arweave.net:443/PklkS62k62MKioyq0Sn5WbbD1jToMyefhgyaj3XqpS4
 ```
 
 Use it in your React app:

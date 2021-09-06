@@ -6,6 +6,12 @@ export type Provider = 'arweave' | 'arconnect' | 'disconnected'
 
 export type arType = arjsType | arcType | null;
 
+export type smartweave = { 
+    write: (input: any, id: string, _key?: any) => Promise<any>; 
+    iread: (input: any, id: string, _key?: any) => Promise<any>; 
+    read: (id: string) => Promise<any>; 
+}; 
+
 export type Wallet ={
     connect: (connector: any, perms: any) => Promise<void>;
     status: Status;
@@ -15,6 +21,7 @@ export type Wallet ={
     poll: (pollFunc: any) => void;
     isloading: number;
     disconnect: () => void;
+    smartweave: smartweave;
 };
 
 export type WalletContext = {

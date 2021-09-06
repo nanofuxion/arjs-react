@@ -3,7 +3,7 @@ import React, { useEffect, createContext, useContext, useState, useMemo, useCall
 import { connectors as arConnector } from './connectors/index';
 import { readContract } from "./connectors/smartweave";
 // import { session } from './sesssionUtils/sessionStorage';
-import { WalletContext, Wallet, Props, Status, Provider } from './types'
+import { WalletContext, Wallet, Props, Status, Provider, smartweave } from './types'
 import Arweave from "arweave";
 
 const UseArjsContext = createContext<WalletContext>(null);
@@ -22,6 +22,9 @@ export function useArjs(): Wallet {
 
     const { wallet, arweave } = walletContext
     return useMemo(() => {
+        if(wallet.status == "connected")
+        //@ts-ignore
+        delete wallet.smartweave;
         return  { ...arweave, ...wallet}
     }, [wallet, arweave])
 }
@@ -130,7 +133,7 @@ export function ArjsProvider({ connectors, enableSWC = false, pollingRate = 5000
     },[status,arweave]);
 
 
-    const smartweave = {
+    let sweave: smartweave = {
 
         read: async (id: string) =>{
             let arweave: Arweave = await Arweave.init({ host: 'arweave.net' });
@@ -145,6 +148,8 @@ export function ArjsProvider({ connectors, enableSWC = false, pollingRate = 5000
             loadStatus("sub");
             return data;
         },
+        write: async () => await null, 
+        iread: async () => await null
     }
 
 
@@ -156,7 +161,7 @@ export function ArjsProvider({ connectors, enableSWC = false, pollingRate = 5000
             provider,
             ready,
             poll,
-            smartweave,
+            smartweave: sweave,
             isloading,
             disconnect
         }),
